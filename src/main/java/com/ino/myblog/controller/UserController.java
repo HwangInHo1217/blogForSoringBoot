@@ -4,13 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ino.myblog.config.auth.PrincipalDetail;
-import com.ino.myblog.model.EmailCheck;
-import com.ino.myblog.model.KakaoProfile;
-import com.ino.myblog.model.OauthToken;
-import com.ino.myblog.model.User;
+import com.ino.myblog.dto.CategoryDto;
+import com.ino.myblog.dto.UserProfileDto;
+import com.ino.myblog.model.*;
+import com.ino.myblog.service.BoardService;
+import com.ino.myblog.service.CategoryService;
 import com.ino.myblog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,13 +22,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.UUID;
 
 //인증이 안된 사용자들이 출입 할 수 있는 경로 /auth
@@ -36,7 +42,11 @@ public class UserController {
     private String inoKey;
 
     @Autowired
-    UserService userService;
+	private     UserService userService;
+	@Autowired
+	private BoardService boardService;
+	@Autowired
+	private CategoryService categoryService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -50,7 +60,7 @@ public class UserController {
     public String joinForm(){
         return "user/joinForm";
     }
-    @GetMapping("/auth/verify")
+	  @GetMapping("/auth/verify")
     public ResponseEntity<?> verifyUser(@RequestParam String token) {
         boolean isVerified = userService.verifyUser(token);
         if (isVerified) {
@@ -72,95 +82,62 @@ public class UserController {
     @GetMapping("/user/updateForm")
     public String updateForm(){return "user/updateForm";}
 
-/*    @GetMapping("/auth/kakao/callback")
-    public @ResponseBody String kakaoCallback(String code){ //Data를 리턴해주는 컨트롤러 함수
+	@GetMapping("/user/{id}")
+	public String userDetail(@PathVariable int id, Model model,
+							 @AuthenticationPrincipal PrincipalDetail principalDetail,
+							 @PageableDefault(size = 3,sort = "id",direction = Sort.Direction.DESC) Pageable pageable){
+		UserProfileDto dto = userService.userProfile(id, principalDetail.getUser().getId());
+		dto.setBoards(userService.userBoardList(id, pageable));
+		model.addAttribute("userId", id);
+		dto.setCategories(userService.userCategoryList(id));
+		model.addAttribute("dto", dto);
+		return "user/userDetail";
+	}
+	@GetMapping("/user/{userId}/category/{categoryId}")
+	public String userCategoryDetail(@PathVariable int userId, @PathVariable int categoryId, Model model,
+									 @AuthenticationPrincipal PrincipalDetail principalDetail,
+									 @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		UserProfileDto dto = userService.userProfile(userId, principalDetail.getUser().getId());
+		dto.setBoards(userService.userBoardListByCategory(userId, categoryId, pageable));
+		dto.setCategories(userService.userCategoryList(userId));
+		model.addAttribute("userId", userId);
+		model.addAttribute("dto", dto);
+		return "user/userDetail";
+	}
+/*	@GetMapping("/category/{parentId}/children")
+	@ResponseBody
+	public ResponseEntity<List<CategoryDto>> getChildCategories(@PathVariable int parentId) {
+		try {
+			List<Category> childCategories = categoryService.getChildCategories(parentId);
+			List<CategoryDto> categoryDtos = childCategories.stream()
+					.map(category -> new CategoryDto(category.getId(), category.getName()))
+					.collect(Collectors.toList());
+			return ResponseEntity.ok(categoryDtos);
+		} catch (Exception e) {
+			// 오류 처리
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}*/
 
-        //post방식으로 key=value 데이터 요청 ( 카톡 쪽으로)
-        RestTemplate rt = new RestTemplate();
-        //HttpHeader 오브젝트 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
+	/*@GetMapping("/setCookie")
+	public String setCookie(HttpServletResponse response) {
+		Cookie cookie = new Cookie("authToken", "your_token_value_here");
+		response.addCookie(cookie);
+		return "Cookie set successfully";
+	}
+	@GetMapping("/readCookie")
+	public String readCookie(@CookieValue(name = "authToken", required = false) String authToken) {
+		if (authToken != null) {
+			return "Auth Token: " + authToken;
+		} else {
+			return "Auth Token not found";
+		}
+	}*/
+/*	@GetMapping("/image/upload")
+	public String upload() {
+		return "image/upload";
+	}*/
 
-
-        //Httpbody 오브젝트 생성
-        MultiValueMap<String,String> params= new LinkedMultiValueMap<>();
-        params.add("grant_type","authorization_code");
-        params.add("client_id","4e832c29b1a13a2c3bc9699fde40040f");
-        params.add("redirect_uri","http://localhost:8000/auth/kakao/callback");
-        params.add("code",code);
-
-        //헤더와 바디를 하나의 오브젝트에 담기
-        HttpEntity<MultiValueMap<String,String>> kakaoTokenRequest =
-            new HttpEntity<>(params,headers);
-        //http 요청하기 -post방식으로 - 그리고 response 변수의 응답 받음.
-        ResponseEntity<String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-
-        ObjectMapper objectMapper=new ObjectMapper();
-        OauthToken oauthToken=null;
-        try {
-            oauthToken=objectMapper.readValue(response.getBody(),OauthToken.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        System.out.println("kakao_oauthToken = " + oauthToken.getAccess_token());
-        //post방식으로 key=value 데이터 요청 ( 카톡 쪽으로)
-        RestTemplate rt2 = new RestTemplate();
-
-        //HttpHeader 오브젝트 생성
-        HttpHeaders headers2 = new HttpHeaders();
-        headers2.add("Authorization", "Bearer "+oauthToken.getAccess_token());
-        headers2.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
-        //헤더와 바디를 하나의 오브젝트에 담기
-        HttpEntity<MultiValueMap<String,String>> kakaoProfileRequest2 =
-                new HttpEntity<>(headers2);
-        //http 요청하기 -post방식으로 - 그리고 response 변수의 응답 받음.
-        ResponseEntity<String> response2 = rt2.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST,
-                kakaoProfileRequest2,
-                String.class
-        );
-        ObjectMapper objectMapper2=new ObjectMapper();
-        KakaoProfile kakaoProfile =null;
-        try {
-            kakaoProfile=objectMapper2.readValue(response2.getBody(),KakaoProfile.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        System.out.println("kakaoProfile = " + kakaoProfile.getId());
-        System.out.println("kakaoUserbme =" + kakaoProfile.getId()+"_of_KaKao");
-     //   UUID garbagePassword=UUID.randomUUID();//UUID -> 중복되지 않는 특정 값을 만드는 알고리즘
-        System.out.println("inoKey = " + inoKey);
-
-        User kakaoUser= User.builder()
-                .username(kakaoProfile.getId()+"_of_KaKao")
-                .password(inoKey.toString())
-                .email("of_kakao")
-                .emailCheck(EmailCheck.YES)
-                .oauth("kakao")
-                .build();
-
-        User originUser=userService.findUser(kakaoUser.getUsername());
-        if(originUser.getUsername()==null){ //기존 회원이 아닐경우 kakao 정보로 회원가입
-            System.out.println("-----------------기존회원아님--------------------");
-            userService.save(kakaoUser);
-        }
-
-
-        Authentication authencation = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(kakaoUser.getUsername(),inoKey));
-        SecurityContextHolder.getContext().setAuthentication(authencation);
-
-        return "redirect:/";
-
-    }*/
     @GetMapping("/auth/kakao/callback")
 	public String kakaoCallback(String code) { // Data를 리턴해주는 컨트롤러 함수
 
@@ -264,6 +241,7 @@ public class UserController {
 
 		return "redirect:/";
 	}
+
 }
 
 

@@ -25,8 +25,15 @@
             <div>
                 ${board.content}
             </div>
+
         </div>
     <hr/>
+        <div >
+            <button class="btn btn-light" id="storyLikeIcon-${board.id}" onclick="toggleLike(${board.id})">
+                <span class="heart-icon">❤️</span>
+            </button>
+            <span class="likes-count" id="storyLikeCount-${board.id}">${board.likeCount} likes</span>
+        </div>
     </div>
     <div class="card">
         <form>

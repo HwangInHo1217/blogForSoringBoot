@@ -1,21 +1,21 @@
 let index = {
     init:function (){
-        $("#btn-save").on("click", ()=>{ // function(){} , ()=>{} this를 바인딩하기 위해서!!
+        $("#btn-user-save").on("click", ()=>{ // function(){} , ()=>{} this를 바인딩하기 위해서!!
             this.save();
         });
-        $("#btn-update").on("click", ()=>{ // function(){} , ()=>{} this를 바인딩하기 위해서!!
+        $("#btn-user-update").on("click", ()=>{ // function(){} , ()=>{} this를 바인딩하기 위해서!!
             this.update();
         });
         this.checkEmailStatus();
     },
     save:function () {
-        //alert("버튼 클릭");
+        alert("이메일 인증까지 다소 시간이 걸리는 점 양해 부탁드립니다."+'\n'+"현재 경고창은 닫으신 후 회원가입 완료창이 나올 때 까지 잠시만 대기 부탁드립니다.");
         let data = {
             username: $("#username").val(),
             password: $("#password").val(),
             email: $("#email").val()
         };
-        //console.log(data);
+        console.log(data);
         //ajax 호출 시 default 가 비동기 호출
         //ajax가 통신을 성공하고, 서버가 json을 리턴해주면 자동으로 자바 오브젝트로 변환
 
@@ -33,6 +33,7 @@ let index = {
             contentType:"application/json; charset=utf-8",//bodt데이터가 어떤 타입인지(MIME)
             dataType:"json"//요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 버퍼로 오기 때문에 문자열로 옴( 생긴게 json이라면) => javasciript 오브젝트로 변경해줌
         }).done(function(resp){
+            console.log(resp);
             if(resp.status == 500) {
                 alert("회원가입 실패 : 이미 존재하는 아이디 입니다.");
             }
@@ -56,7 +57,8 @@ let index = {
             id: $("#id").val(),
             username: $("#username").val(),
             password: $("#password").val(),
-            email: $("#email").val()
+            email: $("#email").val(),
+            bio: $("#bio").val()
         };
 
         $.ajax({
@@ -86,7 +88,6 @@ let index = {
         }).fail(function(error){
             console.log(error);
         });
-
 }
 }
 index.init();

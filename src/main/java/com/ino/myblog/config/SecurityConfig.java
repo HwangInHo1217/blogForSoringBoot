@@ -7,12 +7,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 // 1. 어노테이션 제거
 @Configuration
-public class SecurityConfig{ // 2. extends 제거
+@EnableWebSecurity
+public class SecurityConfig  { // 2. extends 제거
 
  /*   @Autowired
     private PrincioalDetailService princioalDetailService;*/
@@ -42,7 +46,7 @@ public class SecurityConfig{ // 2. extends 제거
 
         // 2. 인증 주소 설정
         http.authorizeRequests(
-                authorize -> authorize.antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**", "/dummy/**")
+                authorize -> authorize.antMatchers("/", "/ws/**","/auth/**", "/js/**", "/css/**", "/image/**", "/dummy/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
@@ -56,33 +60,26 @@ public class SecurityConfig{ // 2. extends 제거
         );
         return http.build();
     }
-}
-/*
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration // IoC
-public class SecurityConfig {
-
-    @Bean
-    BCryptPasswordEncoder encode() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http
+                // 다른 설정들을 추가할 수 있음
                 .authorizeRequests()
-                .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**", "/dummy/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/chat/**").authenticated() // 채팅 관련 URL은 인증이 필요
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/auth/loginForm");
-        return http.build();
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll();
+
+        // 사용자 정보를 세션에 저장
+        http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false);
     }
-}*/
+}

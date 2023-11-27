@@ -5,6 +5,15 @@
 <div class="container">
     <form>
         <div class="form-group">
+            <label for="category">카테고리 선택:</label>
+            <select class="form-control" id="category">
+                <c:forEach items="${categories}" var="category">
+                    <option value="${category.id}">${category.name}</option>
+                </c:forEach>
+            </select>
+        </div>
+
+        <div class="form-group">
             <input type="text" class="form-control" placeholder="제목을 입력하세요" id="title">
         </div>
 
@@ -13,7 +22,7 @@
         </div>
 
     </form>
-    <button id="btn-save" class="btn btn-primary">글쓰기 완료</button>
+    <button id="btn-board-save" class="btn btn-primary">글쓰기 완료</button>
 
 </div>
 <script>

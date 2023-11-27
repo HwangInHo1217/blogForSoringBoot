@@ -1,30 +1,30 @@
-let index = {
+let boardIndex = {
     init:function (){
-        $("#btn-save").on("click", ()=>{ // function(){} , ()=>{} this를 바인딩하기 위해서!!
+        $("#btn-board-save").on("click", ()=>{
             this.save();
         });
-        $("#btn-delete").on("click", ()=>{ // function(){} , ()=>{} this를 바인딩하기 위해서!!
+        $("#btn-delete").on("click", ()=>{
             this.deleteById();
         });
-        $("#btn-update").on("click", ()=>{ // function(){} , ()=>{} this를 바인딩하기 위해서!!
+        $("#btn-update").on("click", ()=>{
             this.update();
         });
-        $("#btn-reply-save").on("click", ()=>{ // function(){} , ()=>{} this를 바인딩하기 위해서!!
+        $("#btn-reply-save").on("click", ()=>{ !!
             this.replySave();
         });
-        $("#btn-search").on("click", ()=>{ // function(){} , ()=>{} this를 바인딩하기 위해서!!
+        $("#btn-search").on("click", ()=>{ !
             this.searchBoard();
         });
     },
     save:function () {
-        //alert("버튼 클릭");
+
         let data = {
             title: $("#title").val(),
-            content: $("#content").val()
+            content: $("#content").val(),
+            categoryId: $("#category").val()
         };
-
+        console.log(data);
         $.ajax({
-
             type:"POST",
             url:"/api/board",
             data:JSON.stringify(data),
@@ -108,7 +108,7 @@ let index = {
             alert(JSON.stringify(error));
         });
     },
-    searchBoard : function (){
+/*    searchBoard : function (){
         let data={
             title :$("#title").val(),
             contente : $("#content").val()
@@ -119,10 +119,42 @@ let index = {
             url:"/api"
         })
 
-    }
+    }*/
 
 }
-index.init();
+$(document).ready(function() {
+    $('.dropdown-item').on('click', function(e) {
+        e.preventDefault(); // 기본 이벤트 방지
+        var selectedFilter = $(this).data('filter');
+        var selectedText = $(this).text();
+        $('#filterType').val(selectedFilter);
+        // 드롭다운 버튼 텍스트 변경
+        $('.dropdown-toggle').text(selectedText);
+    });
+});
+function toggleLike(boardId) {
+    let likeIcon = $(`#storyLikeIcon-${boardId}`);
+    let isLiked = likeIcon.hasClass("active");
+
+    let ajaxType = isLiked ? "delete" : "post";
+
+    $.ajax({
+        type: ajaxType,
+        url: `/api/board/${boardId}/likes`,
+        dataType: "json"
+    }).done(res => {
+        // 좋아요 수를 가져오고, 상태에 따라 증가 또는 감소시킵니다.
+        let likeCountStr = $(`#storyLikeCount-${boardId}`).text().match(/\d+/)[0]; // 정규표현식 사용
+        let likeCount = Number(likeCountStr) + (isLiked ? -1 : 1); // 좋아요 상태에 따라 좋아요 수 변경
+        $(`#storyLikeCount-${boardId}`).text(likeCount + " likes"); // 좋아요 수 업데이트
+
+        // 아이콘 상태를 업데이트합니다.
+        likeIcon.toggleClass("fas far active");
+    }).fail(error => {
+        console.log("오류", error);
+    });
+}
+boardIndex.init();
 
 /*
 * 회원가입시 AJAX를 사용하는 2가지 이유

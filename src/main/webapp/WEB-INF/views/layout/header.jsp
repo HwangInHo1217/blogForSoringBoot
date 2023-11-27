@@ -20,6 +20,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+<%--
+    <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+--%>
 
 
 </head>
@@ -52,6 +56,9 @@
                         <a class="nav-link" href="/user/updateForm">회원정보</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/user/${principal.user.id}">내 블로그</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/logout">로그아웃</a>
                     </li>
                 </ul>
@@ -60,4 +67,5 @@
 
     </div>
 </nav>
+
 <br/>

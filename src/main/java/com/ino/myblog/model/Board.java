@@ -1,7 +1,9 @@
 package com.ino.myblog.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +15,9 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,6 +39,7 @@ public class Board {
 
     @ManyToOne(fetch = FetchType.EAGER) // 다대일 -> 다 = board 1 = user 즉 한명의 유저는 여러 게시글 작성 가능
     @JoinColumn(name="userId")
+    @JsonIgnoreProperties({"boards"})
     private User user; // DB는 오브젝트를 저장 못함. 자바는 오브젝트 저장 가능
 
     @OneToMany(mappedBy = "board",fetch = FetchType.EAGER, cascade = CascadeType.REMOVE) //mappedby 는 연관관계의 주인이 아니다(FK아님) db에 컬럼 만들지마 스프링아
@@ -43,4 +49,20 @@ public class Board {
 
     @CreationTimestamp
     private Timestamp createDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id") // 실제 테이블에 생성될 외래키 컬럼명
+    private Category category;
+
+    @JsonIgnoreProperties({"board"})
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Likes> likes;
+    @Transient // DB에 칼럼이 만들어지지 않는다.
+    private boolean likeState;
+
+    @Transient
+    private int likeCount;
+
+    @Transient
+    private  int replyCount;
 }

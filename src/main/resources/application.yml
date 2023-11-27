@@ -37,7 +37,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: hih1217@skuniv.ac.kr
-    password: dlsgh2711!@#
+    password: dlsgh2711@#
     properties:
       mail:
         smtp:
@@ -46,3 +46,6 @@ spring:
             enable: true
 ino:
   key: ino1217
+
+file:
+  path: C:/Users/InHo_H/Downloads/myblog (3)/upload/

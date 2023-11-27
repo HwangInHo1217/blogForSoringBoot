@@ -2,7 +2,9 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.17'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'war'
 }
+
 
 group = 'com.ino'
 version = '0.0.1-SNAPSHOT'
@@ -35,9 +37,17 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.qlrm:qlrm:2.1.1'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+war{
+	version='1.0'
 }

@@ -1,14 +1,23 @@
 package com.ino.myblog.model;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.ino.myblog.model.Board;
 import java.sql.Timestamp;
+import java.util.List;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,4 +56,15 @@ public class User {
 
     private String oauth;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"user"})
+    private List<Board> boards;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"user"})
+    private List<Category> categorys;
+
+    private String bio; // 자기 소개
+
+    private String profileImageUrl; // 사진
 }

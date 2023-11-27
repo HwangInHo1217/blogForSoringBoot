@@ -65,5 +65,8 @@ public class PrincipalDetail implements UserDetails {
         collectors.add(()->{return "ROLE_"+user.getRole();});
         return collectors;
     }
+    public PrincipalDetail() {
+        super();
+    }
 
 }

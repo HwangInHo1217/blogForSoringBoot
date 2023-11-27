@@ -16,6 +16,10 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
   /*  Optional<User> findByUsername(String username);*/
    Page<Board>  findByTitleContaining(String searchKeyword, Pageable pageable);
 
+    Page<Board> findByUserId(int userId, Pageable pageable);
+    Page<Board> findByUser_UsernameContaining(String searchKeyword, Pageable pageable);
 
+    Page<Board> findByCategoryId(int categoryId, Pageable pageable);
+    Page<Board> findByUserIdAndCategoryId(int userId, int categoryId, Pageable pageable);
 
  }
