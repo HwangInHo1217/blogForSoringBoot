@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>UserProfileDto.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+UserProfileDto.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.dto</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.Board</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.Category</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.User</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.AllArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.Builder</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.Data</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.NoArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.domain.Page</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+
+<span class="s1">@Builder</span>
+<span class="s1">@AllArgsConstructor</span>
+<span class="s1">@NoArgsConstructor</span>
+<span class="s1">@Data</span>
+<span class="s0">public class </span><span class="s1">UserProfileDto {</span>
+    <span class="s0">private boolean </span><span class="s1">pageOwnerState</span><span class="s0">;</span>
+    <span class="s0">private int </span><span class="s1">boardCount</span><span class="s0">;</span>
+    <span class="s0">private boolean </span><span class="s1">subscribeState</span><span class="s0">;</span>
+    <span class="s0">private int </span><span class="s1">subscribeCount</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">User user</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">List&lt;Category&gt; categories</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">Page&lt;Board&gt; boards</span><span class="s0">;</span>
+
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

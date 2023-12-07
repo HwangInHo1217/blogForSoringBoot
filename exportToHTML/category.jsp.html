@@ -1,0 +1,198 @@
+<html>
+<head>
+<title>category.jsp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #cc7832; font-weight: bold;}
+.s2 { color: #a9b7c6;}
+.s3 { color: #6a8759;}
+.s4 { color: #a9b7c6;}
+.s5 { color: #e8bf6a;}
+.s6 { color: #bababa;}
+.s7 { color: #6897bb;}
+.s8 { color: #a5c261;}
+.s9 { color: #cc7832;}
+.s10 { color: #808080;}
+.s11 { color: #cc7832;}
+.s12 { color: #6d9cbe;}
+.s13 { color: #808080;}
+.s14 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+category.jsp</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;%@</span><span class="s1">page </span><span class="s2">language</span><span class="s0">=&quot;</span><span class="s3">java</span><span class="s0">&quot; </span><span class="s2">contentType</span><span class="s0">=&quot;</span><span class="s3">text/html; charset=UTF-8</span><span class="s0">&quot;</span>
+        <span class="s2">pageEncoding</span><span class="s0">=&quot;</span><span class="s3">UTF-8</span><span class="s0">&quot;%&gt;</span>
+
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/header.jsp</span><span class="s0">&quot;%&gt;</span>
+<span class="s5">&lt;style&gt;</span>
+    <span class="s4">.</span><span class="s5">profile-header </span><span class="s4">{</span>
+        <span class="s6">margin-top</span><span class="s4">: </span><span class="s7">20</span><span class="s8">px</span><span class="s9">;</span>
+    <span class="s4">}</span>
+    <span class="s4">.</span><span class="s5">profile-img </span><span class="s4">{</span>
+        <span class="s6">width</span><span class="s4">: </span><span class="s7">150</span><span class="s8">px</span><span class="s9">;</span>
+        <span class="s6">height</span><span class="s4">: </span><span class="s7">150</span><span class="s8">px</span><span class="s9">;</span>
+        <span class="s6">border-radius</span><span class="s4">: </span><span class="s7">50</span><span class="s4">%</span><span class="s9">;</span>
+    <span class="s4">}</span>
+    <span class="s4">.</span><span class="s5">category-card </span><span class="s4">{</span>
+        <span class="s6">background</span><span class="s4">: </span><span class="s7">#fff</span><span class="s9">;</span>
+        <span class="s6">border-radius</span><span class="s4">: </span><span class="s7">0.25</span><span class="s8">rem</span><span class="s9">;</span>
+        <span class="s6">border</span><span class="s4">: </span><span class="s7">1</span><span class="s8">px solid </span><span class="s5">rgba</span><span class="s4">(</span><span class="s7">0</span><span class="s9">,</span><span class="s7">0</span><span class="s9">,</span><span class="s7">0</span><span class="s9">,</span><span class="s7">.125</span><span class="s4">)</span><span class="s9">;</span>
+        <span class="s6">margin-bottom</span><span class="s4">: </span><span class="s7">1</span><span class="s8">rem</span><span class="s9">;</span>
+    <span class="s4">}</span>
+
+    <span class="s4">.</span><span class="s5">category-card-header </span><span class="s4">{</span>
+        <span class="s6">padding</span><span class="s4">: </span><span class="s7">0.75</span><span class="s8">rem </span><span class="s7">1.25</span><span class="s8">rem</span><span class="s9">;</span>
+        <span class="s6">margin-bottom</span><span class="s4">: </span><span class="s7">0</span><span class="s9">;</span>
+        <span class="s6">background-color</span><span class="s4">: </span><span class="s5">rgba</span><span class="s4">(</span><span class="s7">0</span><span class="s9">,</span><span class="s7">0</span><span class="s9">,</span><span class="s7">0</span><span class="s9">,</span><span class="s7">.03</span><span class="s4">)</span><span class="s9">;</span>
+        <span class="s6">border-bottom</span><span class="s4">: </span><span class="s7">1</span><span class="s8">px solid </span><span class="s5">rgba</span><span class="s4">(</span><span class="s7">0</span><span class="s9">,</span><span class="s7">0</span><span class="s9">,</span><span class="s7">0</span><span class="s9">,</span><span class="s7">.125</span><span class="s4">)</span><span class="s9">;</span>
+    <span class="s4">}</span>
+
+    <span class="s4">.</span><span class="s5">category-card-body </span><span class="s4">{</span>
+        <span class="s6">padding</span><span class="s4">: </span><span class="s7">1.25</span><span class="s8">rem</span><span class="s9">;</span>
+    <span class="s4">}</span>
+
+    <span class="s4">.</span><span class="s5">category-card a </span><span class="s4">{</span>
+        <span class="s6">color</span><span class="s4">: </span><span class="s7">#007bff</span><span class="s9">;</span>
+        <span class="s6">text-decoration</span><span class="s4">: </span><span class="s8">none</span><span class="s9">;</span>
+    <span class="s4">}</span>
+
+    <span class="s4">.</span><span class="s5">category-card a</span><span class="s4">:</span><span class="s5">hover </span><span class="s4">{</span>
+        <span class="s6">text-decoration</span><span class="s4">: </span><span class="s8">underline</span><span class="s9">;</span>
+    <span class="s4">}</span>
+
+    <span class="s4">.</span><span class="s5">category-delete-btn </span><span class="s4">{</span>
+        <span class="s6">float</span><span class="s4">: </span><span class="s8">right</span><span class="s9">;</span>
+        <span class="s6">color</span><span class="s4">: </span><span class="s7">#dc3545</span><span class="s9">;</span>
+        <span class="s6">cursor</span><span class="s4">: </span><span class="s8">pointer</span><span class="s9">;</span>
+    <span class="s4">}</span>
+<span class="s5">&lt;/style&gt;</span>
+
+<span class="s10">&lt;!--프로필 섹션--&gt;</span>
+<span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;profile&quot;</span><span class="s5">&gt;</span>
+    <span class="s10">&lt;!--유저정보 컨테이너--&gt;</span>
+    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;Container&quot;</span><span class="s5">&gt;</span>
+
+        <span class="s10">&lt;!--유저정보 및 사진등록 구독하기--&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;profile-header text-center&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;form </span><span class="s6">id</span><span class="s8">=&quot;userProfileImageForm&quot;</span><span class="s5">&gt;</span>
+                <span class="s5">&lt;input </span><span class="s6">type</span><span class="s8">=&quot;file&quot; </span><span class="s6">name</span><span class="s8">=&quot;profileImageFile&quot; </span><span class="s6">style</span><span class="s8">=&quot;</span><span class="s6">display</span><span class="s4">: </span><span class="s8">none</span><span class="s9">;</span><span class="s8">&quot;</span>
+                       <span class="s6">id</span><span class="s8">=&quot;userProfileImageInput&quot; </span><span class="s5">/&gt;</span>
+            <span class="s5">&lt;/form&gt;</span>
+            <span class="s5">&lt;img </span><span class="s6">class</span><span class="s8">=&quot;profile-img&quot; </span><span class="s6">src</span><span class="s8">=&quot;/upload/</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">profileImageUrl</span><span class="s11">}</span><span class="s8">&quot;</span>
+                 <span class="s6">id</span><span class="s8">=&quot;userProfileImage&quot; </span><span class="s5">/&gt;</span>
+            <span class="s5">&lt;h2&gt;</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">username</span><span class="s11">}</span><span class="s5">&lt;/h2&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+                <span class="s0">&lt;</span><span class="s1">c:when </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s11">${empty </span><span class="s2">dto</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">bio</span><span class="s11">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                    <span class="s5">&lt;p </span><span class="s6">class</span><span class="s8">=&quot;lead&quot;</span><span class="s5">&gt;</span><span class="s4">회원정보 수정 창에서 블로그 소개를 작성해주세요!</span><span class="s5">&lt;/p&gt;</span>
+                <span class="s0">&lt;/</span><span class="s1">c:when</span><span class="s0">&gt;</span>
+                <span class="s0">&lt;</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                    <span class="s5">&lt;p </span><span class="s6">class</span><span class="s8">=&quot;lead&quot;</span><span class="s5">&gt;</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">bio</span><span class="s11">}</span><span class="s5">&lt;/p&gt;</span>
+                <span class="s0">&lt;/</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+                <span class="s0">&lt;</span><span class="s1">c:when </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">pageOwnerState</span><span class="s11">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                    <span class="s5">&lt;button </span><span class="s6">class</span><span class="s8">=&quot;btn btn-primary&quot; </span><span class="s6">onclick</span><span class="s8">=&quot;</span><span class="s4">profileImageUpload(</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s11">}</span><span class="s9">, </span><span class="s11">${</span><span class="s2">principal</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s11">}</span><span class="s4">)</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s4">사진 등록</span><span class="s5">&lt;/button&gt;</span>
+                <span class="s0">&lt;/</span><span class="s1">c:when</span><span class="s0">&gt;</span>
+                <span class="s0">&lt;</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                    <span class="s0">&lt;</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+                        <span class="s0">&lt;</span><span class="s1">c:when </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">subscribeState</span><span class="s11">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                            <span class="s5">&lt;button </span><span class="s6">class</span><span class="s8">=&quot;btn btn-primary&quot; </span><span class="s6">onclick</span><span class="s8">=&quot;</span><span class="s4">toggleSubscribe(</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s11">}</span><span class="s9">, this</span><span class="s4">)</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s4">구독취소</span><span class="s5">&lt;/button&gt;</span>
+                        <span class="s0">&lt;/</span><span class="s1">c:when</span><span class="s0">&gt;</span>
+                        <span class="s0">&lt;</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                            <span class="s5">&lt;button </span><span class="s6">class</span><span class="s8">=&quot;btn btn-primary&quot; </span><span class="s6">onclick</span><span class="s8">=&quot;</span><span class="s4">toggleSubscribe(</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s11">}</span><span class="s9">, this</span><span class="s4">)</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s4">구독하기</span><span class="s5">&lt;/button&gt;</span>
+                        <span class="s0">&lt;/</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                    <span class="s0">&lt;/</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+                <span class="s0">&lt;/</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+            <span class="s5">&lt;button </span><span class="s6">class</span><span class="s8">=&quot;btn btn-primary&quot; </span><span class="s6">onclick</span><span class="s8">=&quot;</span><span class="s4">openModal()</span><span class="s9">; </span><span class="s4">subscribeInfoModalOpen(</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s11">}</span><span class="s4">)</span><span class="s9">;</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s4">구독 정보</span><span class="s5">&lt;/button&gt;</span>
+            <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;modal-fade&quot; </span><span class="s6">style</span><span class="s8">=&quot;</span><span class="s6">display</span><span class="s4">: </span><span class="s8">none</span><span class="s9">;</span><span class="s8">&quot;</span><span class="s5">&gt;</span>
+                <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;modal-dialog&quot;</span><span class="s5">&gt;</span>
+                    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;modal-content&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;modal-header&quot;</span><span class="s5">&gt; </span><span class="s4">구독정보</span>
+                            <span class="s5">&lt;button </span><span class="s6">type</span><span class="s8">=&quot;button&quot; </span><span class="s6">class</span><span class="s8">=&quot;close&quot; </span><span class="s6">onclick</span><span class="s8">=&quot;</span><span class="s4">closeModal()</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s12">&amp;times;</span><span class="s5">&lt;/button&gt;</span>
+                        <span class="s5">&lt;/div&gt;</span>
+                        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;modal-body&quot; </span><span class="s6">id</span><span class="s8">=&quot;subscribeModalList&quot;</span><span class="s5">&gt;</span>
+                            <span class="s10">&lt;!-- 구독 정보 내용이 여기에 동적으로 삽입됩니다 --&gt;</span>
+                        <span class="s5">&lt;/div&gt;</span>
+                    <span class="s5">&lt;/div&gt;</span>
+                <span class="s5">&lt;/div&gt;</span>
+            <span class="s5">&lt;/div&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+    <span class="s5">&lt;/div&gt;</span>
+<span class="s5">&lt;/div&gt;</span>
+
+<span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;container-fluid&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;row&quot;</span><span class="s5">&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;col-md-3&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;category-card&quot;</span><span class="s5">&gt;</span>
+                <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;category-card-header&quot;</span><span class="s5">&gt;</span>
+                    <span class="s5">&lt;h3&gt;</span><span class="s4">카테고리</span><span class="s5">&lt;/h3&gt;</span>
+                <span class="s5">&lt;/div&gt;</span>
+                <span class="s5">&lt;ul </span><span class="s6">class</span><span class="s8">=&quot;list-group list-group-flush&quot;</span><span class="s5">&gt;</span>
+                    <span class="s13">&lt;%-- 서버로부터 받아온 카테고리 목록을 반복하여 표시 --%&gt;</span>
+                    <span class="s0">&lt;</span><span class="s1">c:forEach </span><span class="s2">var</span><span class="s3">=&quot;category&quot; </span><span class="s2">items</span><span class="s3">=&quot;</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">categories</span><span class="s11">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                        <span class="s5">&lt;li </span><span class="s6">class</span><span class="s8">=&quot;list-group-item&quot;</span><span class="s5">&gt;</span>
+                            <span class="s5">&lt;a </span><span class="s6">href</span><span class="s8">=&quot;/category/</span><span class="s11">${</span><span class="s2">category</span><span class="s0">.</span><span class="s2">id</span><span class="s11">}</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s11">${</span><span class="s2">category</span><span class="s0">.</span><span class="s2">name</span><span class="s11">}</span><span class="s5">&lt;/a&gt;</span>
+                            <span class="s5">&lt;span </span><span class="s6">class</span><span class="s8">=&quot;category-delete-btn&quot; </span><span class="s6">onclick</span><span class="s8">=&quot;</span><span class="s4">deleteCategory(</span><span class="s11">${</span><span class="s2">category</span><span class="s0">.</span><span class="s2">id</span><span class="s11">}</span><span class="s4">)</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s12">&amp;times;</span><span class="s5">&lt;/span&gt;</span>
+                        <span class="s5">&lt;/li&gt;</span>
+                    <span class="s0">&lt;/</span><span class="s1">c:forEach</span><span class="s0">&gt;</span>
+                <span class="s5">&lt;/ul&gt;</span>
+                <span class="s13">&lt;%-- 로그인한 사용자가 프로필의 주인인 경우에만 추가 버튼 표시 --%&gt;</span>
+                <span class="s0">&lt;</span><span class="s1">c:if </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">pageOwnerState</span><span class="s11">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;category-card-body&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;button </span><span class="s6">class</span><span class="s8">=&quot;btn btn-primary&quot; </span><span class="s6">onclick</span><span class="s8">=&quot;</span><span class="s4">addCategory()</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s4">카테고리 추가</span><span class="s5">&lt;/button&gt;</span>
+                    <span class="s5">&lt;/div&gt;</span>
+                <span class="s0">&lt;/</span><span class="s1">c:if</span><span class="s0">&gt;</span>
+            <span class="s5">&lt;/div&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;col-md-9&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;h3&gt;</span><span class="s4">게시물 목록</span><span class="s5">&lt;/h3&gt;</span>
+            <span class="s10">&lt;!-- 게시물 리스트 시작 --&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:forEach </span><span class="s2">var</span><span class="s3">=&quot;board&quot; </span><span class="s2">items</span><span class="s3">=&quot;</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">content</span><span class="s11">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;card&quot;</span><span class="s5">&gt;</span>
+                    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s8">=&quot;card-body&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;a </span><span class="s6">href</span><span class="s8">=&quot;/board/</span><span class="s11">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">id</span><span class="s11">}</span><span class="s8">&quot;</span><span class="s5">&gt;&lt;h5&gt;</span><span class="s11">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">title</span><span class="s11">}</span><span class="s5">&lt;/h5&gt;&lt;/a&gt;</span>
+                        <span class="s5">&lt;div&gt;</span>
+                            <span class="s5">&lt;span </span><span class="s6">class</span><span class="s8">=&quot;mr-2&quot;</span><span class="s5">&gt;</span><span class="s4">좋아요: </span><span class="s5">&lt;i </span><span class="s6">class</span><span class="s8">=&quot;fas fa-heart&quot;</span><span class="s5">&gt;&lt;/i&gt; </span><span class="s11">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">likeCount</span><span class="s11">}</span><span class="s5">&lt;/span&gt;</span>
+                            <span class="s5">&lt;span&gt;</span><span class="s4">댓글: </span><span class="s11">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">replyCount</span><span class="s11">}</span><span class="s5">&lt;/span&gt;</span>
+                        <span class="s5">&lt;/div&gt;</span>
+                    <span class="s5">&lt;/div&gt;</span>
+                <span class="s5">&lt;/div&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:forEach</span><span class="s0">&gt;</span>
+            <span class="s5">&lt;ul </span><span class="s6">class</span><span class="s8">=&quot;pagination justify-content-center&quot;</span><span class="s5">&gt;</span>
+                <span class="s0">&lt;</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+                    <span class="s0">&lt;</span><span class="s1">c:when </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">first</span><span class="s11">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                        <span class="s5">&lt;li </span><span class="s6">class</span><span class="s8">=&quot;page-item disabled&quot;</span><span class="s5">&gt;&lt;a </span><span class="s6">class</span><span class="s8">=&quot;page-link&quot; </span><span class="s6">href</span><span class="s8">=&quot;?page=</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">number</span><span class="s0">-</span><span class="s14">1</span><span class="s11">}</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s4">Previous</span><span class="s5">&lt;/a&gt;&lt;/li&gt;</span>
+                    <span class="s0">&lt;/</span><span class="s1">c:when</span><span class="s0">&gt;</span>
+                    <span class="s0">&lt;</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                        <span class="s5">&lt;li </span><span class="s6">class</span><span class="s8">=&quot;page-item&quot;</span><span class="s5">&gt;&lt;a </span><span class="s6">class</span><span class="s8">=&quot;page-link&quot; </span><span class="s6">href</span><span class="s8">=&quot;?page=</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">number</span><span class="s0">-</span><span class="s14">1</span><span class="s11">}</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s4">Previous</span><span class="s5">&lt;/a&gt;&lt;/li&gt;</span>
+                    <span class="s0">&lt;/</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                <span class="s0">&lt;/</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+
+                <span class="s0">&lt;</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+                    <span class="s0">&lt;</span><span class="s1">c:when </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">last</span><span class="s11">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                        <span class="s5">&lt;li </span><span class="s6">class</span><span class="s8">=&quot;page-item disabled&quot;</span><span class="s5">&gt;&lt;a </span><span class="s6">class</span><span class="s8">=&quot;page-link&quot; </span><span class="s6">href</span><span class="s8">=&quot;?page=</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">number</span><span class="s0">+</span><span class="s14">1</span><span class="s11">}</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s4">Next</span><span class="s5">&lt;/a&gt;&lt;/li&gt;</span>
+                    <span class="s0">&lt;/</span><span class="s1">c:when</span><span class="s0">&gt;</span>
+                    <span class="s0">&lt;</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                        <span class="s5">&lt;li </span><span class="s6">class</span><span class="s8">=&quot;page-item&quot;</span><span class="s5">&gt;&lt;a </span><span class="s6">class</span><span class="s8">=&quot;page-link&quot; </span><span class="s6">href</span><span class="s8">=&quot;?page=</span><span class="s11">${</span><span class="s2">dto</span><span class="s0">.</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">number</span><span class="s0">+</span><span class="s14">1</span><span class="s11">}</span><span class="s8">&quot;</span><span class="s5">&gt;</span><span class="s4">Next</span><span class="s5">&lt;/a&gt;&lt;/li&gt;</span>
+                    <span class="s0">&lt;/</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                <span class="s0">&lt;/</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+            <span class="s5">&lt;/ul&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+    <span class="s5">&lt;/div&gt;</span>
+<span class="s5">&lt;/div&gt;</span>
+
+<span class="s5">&lt;script </span><span class="s6">src</span><span class="s8">=&quot;/js/profile.js&quot;</span><span class="s5">&gt;&lt;/script&gt;</span>
+<span class="s5">&lt;script </span><span class="s6">src</span><span class="s8">=&quot;/js/category.js&quot;</span><span class="s5">&gt;&lt;/script&gt;</span>
+
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/footer.jsp</span><span class="s0">&quot;%&gt;</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>SubscribeRepository.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SubscribeRepository.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.repository</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.Subscribe</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.jpa.repository.JpaRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.jpa.repository.Modifying</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.jpa.repository.Query</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.repository.query.Param</span><span class="s0">;</span>
+
+<span class="s0">public interface </span><span class="s1">SubscribeRepository </span><span class="s0">extends </span><span class="s1">JpaRepository&lt;Subscribe</span><span class="s0">, </span><span class="s1">Integer&gt; {</span>
+
+	<span class="s1">@Modifying </span><span class="s2">// INSERT, DELETE, UPDATE 를 네이티브 쿼리로 작성하려면 해당 어노테이션 필요!!</span>
+	<span class="s1">@Query(value = </span><span class="s3">&quot;INSERT INTO subscribe(fromUserId, toUserId, createDate) VALUES(:fromUserId, :toUserId, now())&quot;</span><span class="s0">, </span><span class="s1">nativeQuery = </span><span class="s0">true</span><span class="s1">)</span>
+	<span class="s0">void </span><span class="s1">mSubscribe(@Param(</span><span class="s3">&quot;fromUserId&quot;</span><span class="s1">) </span><span class="s0">int </span><span class="s1">fromUserId</span><span class="s0">, </span><span class="s1">@Param(</span><span class="s3">&quot;toUserId&quot;</span><span class="s1">) </span><span class="s0">int </span><span class="s1">toUserId)</span><span class="s0">;</span>
+
+	<span class="s1">@Modifying</span>
+	<span class="s1">@Query(value = </span><span class="s3">&quot;DELETE FROM subscribe WHERE fromUserId = :fromUserId AND toUserId = :toUserId&quot;</span><span class="s0">, </span><span class="s1">nativeQuery = </span><span class="s0">true</span><span class="s1">)</span>
+	<span class="s0">void </span><span class="s1">mUnSubscribe(@Param(</span><span class="s3">&quot;fromUserId&quot;</span><span class="s1">) </span><span class="s0">int </span><span class="s1">fromUserId</span><span class="s0">, </span><span class="s1">@Param(</span><span class="s3">&quot;toUserId&quot;</span><span class="s1">) </span><span class="s0">int </span><span class="s1">toUserId)</span><span class="s0">;</span>
+
+	<span class="s1">@Query(value = </span><span class="s3">&quot;SELECT COUNT(*) FROM subscribe WHERE fromUserId = :principalId AND toUserId = :pageUserId&quot;</span><span class="s0">, </span><span class="s1">nativeQuery = </span><span class="s0">true</span><span class="s1">)</span>
+	<span class="s0">int </span><span class="s1">mSubscribeState(@Param(</span><span class="s3">&quot;principalId&quot;</span><span class="s1">) </span><span class="s0">int </span><span class="s1">principalId</span><span class="s0">, </span><span class="s1">@Param(</span><span class="s3">&quot;pageUserId&quot;</span><span class="s1">) </span><span class="s0">int </span><span class="s1">pageUserId)</span><span class="s0">;</span>
+
+	<span class="s1">@Query(value = </span><span class="s3">&quot;SELECT COUNT(*) FROM subscribe WHERE fromUserId = :pageUserId&quot;</span><span class="s0">, </span><span class="s1">nativeQuery = </span><span class="s0">true</span><span class="s1">)</span>
+	<span class="s0">int </span><span class="s1">mSubscribeCount(@Param(</span><span class="s3">&quot;pageUserId&quot;</span><span class="s1">) </span><span class="s0">int </span><span class="s1">pageUserId)</span><span class="s0">;</span>
+
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

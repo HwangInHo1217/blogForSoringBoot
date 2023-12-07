@@ -1,0 +1,119 @@
+<html>
+<head>
+<title>user.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+user.js</font>
+</center></td></tr></table>
+<pre><span class="s0">let </span><span class="s1">index = {</span>
+    <span class="s1">init:</span><span class="s0">function </span><span class="s1">(){</span>
+        <span class="s1">$(</span><span class="s2">&quot;#btn-user-save&quot;</span><span class="s1">).on(</span><span class="s2">&quot;click&quot;</span><span class="s0">, </span><span class="s1">()=&gt;{ </span><span class="s3">// function(){} , ()=&gt;{} this를 바인딩하기 위해서!!</span>
+            <span class="s0">this</span><span class="s1">.save()</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">$(</span><span class="s2">&quot;#btn-user-update&quot;</span><span class="s1">).on(</span><span class="s2">&quot;click&quot;</span><span class="s0">, </span><span class="s1">()=&gt;{ </span><span class="s3">// function(){} , ()=&gt;{} this를 바인딩하기 위해서!!</span>
+            <span class="s0">this</span><span class="s1">.update()</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.checkEmailStatus()</span><span class="s0">;</span>
+    <span class="s1">}</span><span class="s0">,</span>
+    <span class="s1">save:</span><span class="s0">function </span><span class="s1">() {</span>
+        <span class="s1">alert(</span><span class="s2">&quot;이메일 인증까지 다소 시간이 걸리는 점 양해 부탁드립니다.&quot;</span><span class="s1">+</span><span class="s2">'</span><span class="s0">\n</span><span class="s2">'</span><span class="s1">+</span><span class="s2">&quot;현재 경고창은 닫으신 후 회원가입 완료창이 나올 때 까지 잠시만 대기 부탁드립니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">let </span><span class="s1">data = {</span>
+            <span class="s1">username: $(</span><span class="s2">&quot;#username&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">password: $(</span><span class="s2">&quot;#password&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">email: $(</span><span class="s2">&quot;#email&quot;</span><span class="s1">).val()</span>
+        <span class="s1">}</span><span class="s0">;</span>
+        <span class="s1">console.log(data)</span><span class="s0">;</span>
+        <span class="s3">//ajax 호출 시 default 가 비동기 호출</span>
+        <span class="s3">//ajax가 통신을 성공하고, 서버가 json을 리턴해주면 자동으로 자바 오브젝트로 변환</span>
+
+        <span class="s0">if </span><span class="s1">(!data.username || !data.password || !data.email) {</span>
+            <span class="s1">alert(</span><span class="s2">&quot;입력되지 않은 항목이 있습니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return; </span><span class="s3">// 함수 실행 중단</span>
+        <span class="s1">}</span>
+        <span class="s1">$.ajax({</span>
+            <span class="s3">//회원가입 수행 요청</span>
+            <span class="s3">//요청 정상수행 done</span>
+            <span class="s3">//실패 시 fail</span>
+            <span class="s1">type:</span><span class="s2">&quot;POST&quot;</span><span class="s0">,</span>
+            <span class="s1">url:</span><span class="s2">&quot;/auth/joinProc&quot;</span><span class="s0">,</span>
+            <span class="s1">data:JSON.stringify(data)</span><span class="s0">,</span><span class="s3">//http body data</span>
+            <span class="s1">contentType:</span><span class="s2">&quot;application/json; charset=utf-8&quot;</span><span class="s0">,</span><span class="s3">//bodt데이터가 어떤 타입인지(MIME)</span>
+            <span class="s1">dataType:</span><span class="s2">&quot;json&quot;</span><span class="s3">//요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 버퍼로 오기 때문에 문자열로 옴( 생긴게 json이라면) =&gt; javasciript 오브젝트로 변경해줌</span>
+        <span class="s1">}).done(</span><span class="s0">function</span><span class="s1">(resp){</span>
+            <span class="s1">console.log(resp)</span><span class="s0">;</span>
+            <span class="s0">if</span><span class="s1">(resp.status == </span><span class="s4">500</span><span class="s1">) {</span>
+                <span class="s1">alert(</span><span class="s2">&quot;회원가입 실패 : 이미 존재하는 아이디 입니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">else if </span><span class="s1">(resp.status == </span><span class="s4">200</span><span class="s1">) { </span><span class="s3">// 회원가입 성공</span>
+                <span class="s1">alert(</span><span class="s2">&quot;회원가입 완료&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">alert(</span><span class="s2">&quot;이메일 인증 안내를 확인해 주세요.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">location.href=</span><span class="s2">&quot;/&quot;</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s0">else</span><span class="s1">{</span>
+                <span class="s1">alert(</span><span class="s2">&quot;회원가입 처리 중 오류가 발생했습니다.&quot;</span><span class="s1">)</span>
+            <span class="s1">}</span>
+            <span class="s3">//alert(resp);</span>
+            <span class="s1">location.href=</span><span class="s2">&quot;/&quot;</span><span class="s0">;</span>
+        <span class="s1">}).fail(</span><span class="s0">function</span><span class="s1">(error){</span>
+            <span class="s1">alert(JSON.stringify(error))</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span><span class="s3">//ajax 통신을 이용해서 3개의 데이터를 json으로 변경하여 insert 요청!</span>
+    <span class="s1">}</span><span class="s0">,</span>
+    <span class="s1">update:</span><span class="s0">function </span><span class="s1">() {</span>
+        <span class="s3">//alert(&quot;버튼 클릭&quot;);</span>
+        <span class="s0">let </span><span class="s1">data = {</span>
+            <span class="s1">id: $(</span><span class="s2">&quot;#id&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">username: $(</span><span class="s2">&quot;#username&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">password: $(</span><span class="s2">&quot;#password&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">email: $(</span><span class="s2">&quot;#email&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">bio: $(</span><span class="s2">&quot;#bio&quot;</span><span class="s1">).val()</span>
+        <span class="s1">}</span><span class="s0">;</span>
+
+        <span class="s1">$.ajax({</span>
+            <span class="s1">type:</span><span class="s2">&quot;PUT&quot;</span><span class="s0">,</span>
+            <span class="s1">url:</span><span class="s2">&quot;/user&quot;</span><span class="s0">,</span>
+            <span class="s1">data:JSON.stringify(data)</span><span class="s0">,</span><span class="s3">//http body data</span>
+            <span class="s1">contentType:</span><span class="s2">&quot;application/json; charset=utf-8&quot;</span><span class="s0">,</span><span class="s3">//bodt데이터가 어떤 타입인지(MIME)</span>
+            <span class="s1">dataType:</span><span class="s2">&quot;json&quot;</span><span class="s3">//요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 버퍼로 오기 때문에 문자열로 옴( 생긴게 json이라면) =&gt; javasciript 오브젝트로 변경해줌</span>
+        <span class="s1">}).done(</span><span class="s0">function</span><span class="s1">(resp){</span>
+            <span class="s1">alert(</span><span class="s2">&quot;회원수정 완료&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s3">//alert(resp);</span>
+            <span class="s1">location.href=</span><span class="s2">&quot;/&quot;</span><span class="s0">;</span>
+        <span class="s1">}).fail(</span><span class="s0">function</span><span class="s1">(error){</span>
+            <span class="s1">alert(JSON.stringify(error))</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span><span class="s3">//ajax 통신을 이용해서 3개의 데이터를 json으로 변경하여 insert 요청!</span>
+    <span class="s1">}</span><span class="s0">,</span>
+    <span class="s1">checkEmailStatus: </span><span class="s0">function</span><span class="s1">() {</span>
+        <span class="s1">$.ajax({</span>
+            <span class="s1">type: </span><span class="s2">&quot;GET&quot;</span><span class="s0">,</span>
+            <span class="s1">url: </span><span class="s2">&quot;/user/checkEmailStatus&quot;</span><span class="s0">,</span>
+            <span class="s1">dataType: </span><span class="s2">&quot;text&quot;</span>
+        <span class="s1">}).done(</span><span class="s0">function</span><span class="s1">(resp){</span>
+            <span class="s0">if</span><span class="s1">(resp == </span><span class="s2">'NO' </span><span class="s1">|| resp.status == </span><span class="s4">500</span><span class="s1">) {</span>
+                <span class="s1">alert(</span><span class="s2">&quot;이메일 인증이 완료되지 않았습니다. 이메일을 확인해주세요.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">location.href=</span><span class="s2">&quot;/logout&quot;</span>
+            <span class="s1">}</span>
+        <span class="s1">}).fail(</span><span class="s0">function</span><span class="s1">(error){</span>
+            <span class="s1">console.log(error)</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+<span class="s1">}</span>
+<span class="s1">}</span>
+<span class="s1">index.init()</span><span class="s0">;</span>
+
+<span class="s3">/* 
+* 회원가입시 AJAX를 사용하는 2가지 이유 
+* 요청에 대한 응답을 HTNL이 아닌 DATA(JSON)으로 받기 위해-&gt;서버를 2개가 아닌 1개만 사용 가능 
+* 비동기 통신을 하기 위해 -&gt; 비절차적 
+* */</span></pre>
+</body>
+</html>

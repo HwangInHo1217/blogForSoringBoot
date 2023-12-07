@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>Gmail.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Gmail.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.util</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javax.mail.Authenticator</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javax.mail.PasswordAuthentication</span><span class="s0">;</span>
+
+
+<span class="s0">public class </span><span class="s1">Gmail </span><span class="s0">extends </span><span class="s1">Authenticator {</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected </span><span class="s1">PasswordAuthentication getPasswordAuthentication() {</span>
+        <span class="s0">return new </span><span class="s1">PasswordAuthentication(</span><span class="s2">&quot;hih1217@skuniv.ac.kr&quot;</span><span class="s0">, </span><span class="s2">&quot;dlsgh2711!@#&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<html>
+<head>
+<title>application.yml</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #a9b7c6;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+application.yml</font>
+</center></td></tr></table>
+<pre><span class="s0">server</span><span class="s1">:</span>
+  <span class="s0">port</span><span class="s1">: </span><span class="s2">8000</span>
+  <span class="s0">servlet</span><span class="s1">:</span>
+    <span class="s0">context-path</span><span class="s1">: </span><span class="s2">/</span>
+    <span class="s0">encoding</span><span class="s1">:</span>
+      <span class="s0">charset</span><span class="s1">: </span><span class="s2">UTF-8</span>
+      <span class="s0">enabled</span><span class="s1">: </span><span class="s2">true</span>
+      <span class="s0">force</span><span class="s1">: </span><span class="s2">true</span>
+
+<span class="s0">spring</span><span class="s1">:</span>
+  <span class="s0">mvc</span><span class="s1">:</span>
+    <span class="s0">view</span><span class="s1">:</span>
+      <span class="s0">prefix</span><span class="s1">: </span><span class="s2">/WEB-INF/views/</span>
+      <span class="s0">suffix</span><span class="s1">: </span><span class="s2">.jsp</span>
+
+  <span class="s0">datasource</span><span class="s1">:</span>
+    <span class="s0">driver-class-name</span><span class="s1">: </span><span class="s2">com.mysql.cj.jdbc.Driver</span>
+    <span class="s0">url</span><span class="s1">: </span><span class="s2">jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul</span>
+    <span class="s0">username</span><span class="s1">: </span><span class="s2">admin</span>
+    <span class="s0">password</span><span class="s1">: </span><span class="s2">admin1217</span>
+
+  <span class="s0">jpa</span><span class="s1">:</span>
+    <span class="s0">open-in-view</span><span class="s1">: </span><span class="s2">true</span>
+    <span class="s0">hibernate</span><span class="s1">:</span>
+      <span class="s0">ddl-auto</span><span class="s1">: </span><span class="s2">update</span>
+      <span class="s0">naming</span><span class="s1">:</span>
+        <span class="s0">physical-strategy</span><span class="s1">: </span><span class="s2">org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl</span>
+      <span class="s0">use-new-id-generator-mappings</span><span class="s1">: </span><span class="s2">false</span>
+    <span class="s0">show-sql</span><span class="s1">: </span><span class="s2">true</span>
+    <span class="s0">properties</span><span class="s1">:</span>
+      <span class="s0">hibernate.format_sql</span><span class="s1">: </span><span class="s2">true</span>
+
+  <span class="s0">jackson</span><span class="s1">:</span>
+    <span class="s0">serialization</span><span class="s1">:</span>
+      <span class="s0">fail-on-empty-beans</span><span class="s1">: </span><span class="s2">false</span>
+  <span class="s0">mail</span><span class="s1">:</span>
+    <span class="s0">host</span><span class="s1">: </span><span class="s2">smtp.gmail.com</span>
+    <span class="s0">port</span><span class="s1">: </span><span class="s2">587</span>
+    <span class="s0">username</span><span class="s1">: </span><span class="s2">hih1217@skuniv.ac.kr</span>
+    <span class="s0">password</span><span class="s1">: </span><span class="s2">dlsgh2711@#</span>
+    <span class="s0">properties</span><span class="s1">:</span>
+      <span class="s0">mail</span><span class="s1">:</span>
+        <span class="s0">smtp</span><span class="s1">:</span>
+          <span class="s0">auth</span><span class="s1">: </span><span class="s2">true</span>
+          <span class="s0">starttls</span><span class="s1">:</span>
+            <span class="s0">enable</span><span class="s1">: </span><span class="s2">true</span>
+<span class="s0">ino</span><span class="s1">:</span>
+  <span class="s0">key</span><span class="s1">: </span><span class="s2">ino1217</span>
+
+<span class="s0">file</span><span class="s1">:</span>
+  <span class="s0">path</span><span class="s1">: </span><span class="s2">C:/Users/InHo_H/Downloads/myblog (3)/upload/</span>
+</pre>
+</body>
+</html>

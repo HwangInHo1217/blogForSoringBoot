@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>BoardService.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+BoardService.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.service</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.dto.BoardDto</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.dto.ReplySaveRequestDto</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.Board</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.Category</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.Reply</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.User</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.BoardRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.CategoryRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.ReplyRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.UserRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.beans.factory.annotation.Autowired</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.domain.Page</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.domain.Pageable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.stereotype.Service</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.transaction.annotation.Transactional</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+
+<span class="s1">@Service</span>
+<span class="s0">public class </span><span class="s1">BoardService {</span>
+
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">BoardRepository boardRepository</span><span class="s0">;</span>
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">ReplyRepository replyRepository</span><span class="s0">;</span>
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">UserRepository userRepository</span><span class="s0">;</span>
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">CategoryRepository categoryRepository</span><span class="s0">;</span>
+
+    <span class="s1">@Transactional</span>
+    <span class="s0">public void </span><span class="s1">boardWrite(BoardDto boardDTO</span><span class="s0">, </span><span class="s1">User user) {</span>
+        <span class="s0">int </span><span class="s1">categoryId = boardDTO.getCategoryId()</span><span class="s0">;</span>
+        <span class="s1">Category category = categoryRepository.findById(boardDTO.getCategoryId())</span>
+                <span class="s1">.orElseThrow(() -&gt; </span><span class="s0">new </span><span class="s1">IllegalArgumentException(</span><span class="s2">&quot;Invalid category ID: &quot; </span><span class="s1">+ categoryId+</span><span class="s2">&quot;  categortId : &quot;</span><span class="s1">+boardDTO.getCategoryId()))</span><span class="s0">;</span>
+
+        <span class="s1">Board board = </span><span class="s0">new </span><span class="s1">Board()</span><span class="s0">;</span>
+        <span class="s1">board.setTitle(boardDTO.getTitle())</span><span class="s0">;</span>
+        <span class="s1">board.setContent(boardDTO.getContent())</span><span class="s0">;</span>
+        <span class="s1">board.setCategory(category)</span><span class="s0">;</span>
+        <span class="s1">board.setUser(user)</span><span class="s0">;</span>
+
+        <span class="s1">boardRepository.save(board)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+ <span class="s3">/*   @Transactional 
+    public Page&lt;Board&gt; findBoardsByCategoryId(int categoryId, Pageable pageable) { 
+        return boardRepository.findByCategoryId(categoryId, pageable); 
+    }*/</span>
+
+    <span class="s0">private void </span><span class="s1">calculateLikesAndReplies(Board board) {</span>
+        <span class="s0">int </span><span class="s1">likeCount = board.getLikes().size()</span><span class="s0">; </span><span class="s3">// 좋아요 수 계산</span>
+        <span class="s0">int </span><span class="s1">replyCount = board.getReplys().size()</span><span class="s0">; </span><span class="s3">// 댓글 수 계산</span>
+        <span class="s1">board.setLikeCount(likeCount)</span><span class="s0">;</span>
+        <span class="s1">board.setReplyCount(replyCount)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public </span><span class="s1">Page&lt;Board&gt; boardList(Pageable pageable){</span>
+        <span class="s1">Page&lt;Board&gt; boards = boardRepository.findAll(pageable)</span><span class="s0">;</span>
+        <span class="s1">boards.forEach(</span><span class="s0">this</span><span class="s1">::calculateLikesAndReplies)</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">boards</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Transactional(readOnly = </span><span class="s0">true</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">Board boardDetail(</span><span class="s0">int </span><span class="s1">id) {</span>
+        <span class="s1">Board board = boardRepository.findById(id).orElseThrow(()-&gt; </span><span class="s0">new </span><span class="s1">IllegalArgumentException(</span><span class="s2">&quot;해당 게시글이 없습니다.&quot;</span><span class="s1">))</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">likeCount = board.getLikes().size()</span><span class="s0">; </span><span class="s3">// 좋아요 수 계산</span>
+        <span class="s1">board.setLikeCount(likeCount)</span><span class="s0">; </span><span class="s3">// 좋아요 수 설정</span>
+        <span class="s0">return </span><span class="s1">board</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional</span>
+    <span class="s0">public void </span><span class="s1">boardCount(</span><span class="s0">int </span><span class="s1">id){</span>
+        <span class="s1">Board board=boardRepository.findById(id)</span>
+                <span class="s1">.orElseThrow(()-&gt;{</span>
+                    <span class="s0">return new </span><span class="s1">IllegalArgumentException(</span><span class="s2">&quot;글 찾기 실패: 해당 글이 존재하지 않습니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">})</span><span class="s0">;</span><span class="s3">//영속화 완료</span>
+        <span class="s1">board.setCount(board.getCount()+</span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional</span>
+    <span class="s0">public void </span><span class="s1">boardDelete(</span><span class="s0">int </span><span class="s1">id){</span>
+        <span class="s1">boardRepository.deleteById(id)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional</span>
+    <span class="s0">public void </span><span class="s1">boardUpdate(</span><span class="s0">int </span><span class="s1">id</span><span class="s0">, </span><span class="s1">Board requestBoard){</span>
+        <span class="s1">Board board=boardRepository.findById(id)</span>
+                <span class="s1">.orElseThrow(()-&gt;{</span>
+                    <span class="s0">return new </span><span class="s1">IllegalArgumentException(</span><span class="s2">&quot;글 찾기 실패: 해당 글이 존재하지 않습니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">})</span><span class="s0">;</span><span class="s3">//영속화 완료</span>
+        <span class="s1">board.setTitle(requestBoard.getTitle())</span><span class="s0">;</span>
+        <span class="s1">board.setContent(requestBoard.getContent())</span><span class="s0">;</span>
+        <span class="s3">//해당함수 종료시에 트랜잭션이 service가 종료 될 때) 트랜잭션이 종료됨, 이때 더티체킹이 발생-자동업데이트(db flush)</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Transactional</span>
+    <span class="s0">public void </span><span class="s1">replyWrite(ReplySaveRequestDto replySaveRequestDto){</span>
+        <span class="s1">Board board = boardRepository.findById(replySaveRequestDto.getBoardId()).orElseThrow(()-&gt;{</span>
+            <span class="s0">return new </span><span class="s1">IllegalArgumentException(</span><span class="s2">&quot;댓글 쓰기 실패 : 사용자 id를 찾을 수 없습니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span><span class="s3">//영속화 완료</span>
+        <span class="s1">User user = userRepository.findById(replySaveRequestDto.getUserId()).orElseThrow(()-&gt;{</span>
+            <span class="s0">return new </span><span class="s1">IllegalArgumentException(</span><span class="s2">&quot;댓글 쓰기 실패 : 게시글 id를 찾을 수 없습니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span><span class="s3">//영속화 완료</span>
+        <span class="s1">Reply reply= Reply.builder()</span>
+                <span class="s1">.user(user)</span>
+                <span class="s1">.board(board)</span>
+                <span class="s1">.content(replySaveRequestDto.getContent())</span>
+                <span class="s1">.build()</span><span class="s0">;</span>
+
+        <span class="s3">//reply.update(user,board, replySaveRequestDto.getContent());</span>
+
+        <span class="s1">replyRepository.save(reply)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Transactional</span>
+    <span class="s0">public void </span><span class="s1">replyDelete(</span><span class="s0">int </span><span class="s1">replyId) {</span>
+        <span class="s1">replyRepository.deleteById(replyId)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional</span>
+    <span class="s0">public </span><span class="s1">Page&lt;Board&gt; boardSearchList(String searchKeyword</span><span class="s0">, </span><span class="s1">Pageable pageable){</span>
+        <span class="s0">return </span><span class="s1">boardRepository.findByTitleContaining(searchKeyword</span><span class="s0">, </span><span class="s1">pageable)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public </span><span class="s1">Page&lt;Board&gt; boardUserSearchList(String searchKeyword</span><span class="s0">, </span><span class="s1">Pageable pageable) {</span>
+        <span class="s0">return </span><span class="s1">boardRepository.findByUser_UsernameContaining(searchKeyword</span><span class="s0">, </span><span class="s1">pageable)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+<span class="s3">/*서비스가 필요한 이유 
+*   트랜젝션 관리 
+* 서비스 의미*/</span></pre>
+</body>
+</html>

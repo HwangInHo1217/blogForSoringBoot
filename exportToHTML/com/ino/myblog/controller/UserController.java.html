@@ -1,0 +1,268 @@
+<html>
+<head>
+<title>UserController.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6a8759;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+UserController.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.controller</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.fasterxml.jackson.core.JsonProcessingException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.fasterxml.jackson.databind.JsonMappingException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.fasterxml.jackson.databind.ObjectMapper</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.config.auth.PrincipalDetail</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.dto.CategoryDto</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.dto.UserProfileDto</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.service.BoardService</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.service.CategoryService</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.service.UserService</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.beans.factory.annotation.Autowired</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.beans.factory.annotation.Value</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.domain.Pageable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.domain.Sort</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.web.PageableDefault</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.http.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.security.authentication.AuthenticationManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.security.authentication.UsernamePasswordAuthenticationToken</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.security.core.Authentication</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.security.core.annotation.AuthenticationPrincipal</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.security.core.context.SecurityContextHolder</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.stereotype.Controller</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.ui.Model</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.util.LinkedMultiValueMap</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.util.MultiValueMap</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.web.bind.annotation.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.web.client.RestTemplate</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javax.servlet.http.Cookie</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javax.servlet.http.HttpServletResponse</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.UUID</span><span class="s0">;</span>
+
+<span class="s2">//인증이 안된 사용자들이 출입 할 수 있는 경로 /auth</span>
+<span class="s2">// 주소가 / 이면 index.jsp 허용</span>
+<span class="s2">// static이하에 있는 /js/**, .css .i</span>
+<span class="s1">@Controller</span>
+<span class="s0">public class </span><span class="s1">UserController {</span>
+    <span class="s1">@Value(</span><span class="s3">&quot;${ino.key}&quot;</span><span class="s1">)</span>
+    <span class="s0">private </span><span class="s1">String inoKey</span><span class="s0">;</span>
+
+    <span class="s1">@Autowired</span>
+	<span class="s0">private     </span><span class="s1">UserService userService</span><span class="s0">;</span>
+	<span class="s1">@Autowired</span>
+	<span class="s0">private </span><span class="s1">BoardService boardService</span><span class="s0">;</span>
+	<span class="s1">@Autowired</span>
+	<span class="s0">private </span><span class="s1">CategoryService categoryService</span><span class="s0">;</span>
+
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">AuthenticationManager authenticationManager</span><span class="s0">;</span>
+
+    <span class="s1">@GetMapping(</span><span class="s3">&quot;/&quot;</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">String index(){</span>
+        <span class="s0">return </span><span class="s3">&quot;index&quot;</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@GetMapping(</span><span class="s3">&quot;/auth/joinForm&quot;</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">String joinForm(){</span>
+        <span class="s0">return </span><span class="s3">&quot;user/joinForm&quot;</span><span class="s0">;</span>
+    <span class="s1">}</span>
+	  <span class="s1">@GetMapping(</span><span class="s3">&quot;/auth/verify&quot;</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">ResponseEntity&lt;?&gt; verifyUser(@RequestParam String token) {</span>
+        <span class="s0">boolean </span><span class="s1">isVerified = userService.verifyUser(token)</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(isVerified) {</span>
+            <span class="s0">return </span><span class="s1">ResponseEntity.ok(</span><span class="s3">&quot;인증 완료!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s0">return </span><span class="s1">ResponseEntity.status(HttpStatus.BAD_REQUEST).body(</span><span class="s3">&quot;인증 실패.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s1">@GetMapping(</span><span class="s3">&quot;/user/checkEmailStatus&quot;</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">ResponseEntity&lt;?&gt; checkEmailStatus(@AuthenticationPrincipal PrincipalDetail principalDetail) {</span>
+        <span class="s1">String emailCheckStatus = principalDetail.getEmailCheck()</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">ResponseEntity.ok(emailCheckStatus)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@GetMapping(</span><span class="s3">&quot;/auth/loginForm&quot;</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">String loginForm(){</span>
+        <span class="s0">return  </span><span class="s3">&quot;user/loginForm&quot;</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@GetMapping(</span><span class="s3">&quot;/user/updateForm&quot;</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">String updateForm(){</span><span class="s0">return </span><span class="s3">&quot;user/updateForm&quot;</span><span class="s0">;</span><span class="s1">}</span>
+
+	<span class="s1">@GetMapping(</span><span class="s3">&quot;/user/{id}&quot;</span><span class="s1">)</span>
+	<span class="s0">public </span><span class="s1">String userDetail(@PathVariable </span><span class="s0">int </span><span class="s1">id</span><span class="s0">, </span><span class="s1">Model model</span><span class="s0">,</span>
+							 <span class="s1">@AuthenticationPrincipal PrincipalDetail principalDetail</span><span class="s0">,</span>
+							 <span class="s1">@PageableDefault(size = </span><span class="s4">3</span><span class="s0">,</span><span class="s1">sort = </span><span class="s3">&quot;id&quot;</span><span class="s0">,</span><span class="s1">direction = Sort.Direction.DESC) Pageable pageable){</span>
+		<span class="s1">UserProfileDto dto = userService.userProfile(id</span><span class="s0">, </span><span class="s1">principalDetail.getUser().getId())</span><span class="s0">;</span>
+		<span class="s1">dto.setBoards(userService.userBoardList(id</span><span class="s0">, </span><span class="s1">pageable))</span><span class="s0">;</span>
+		<span class="s1">model.addAttribute(</span><span class="s3">&quot;userId&quot;</span><span class="s0">, </span><span class="s1">id)</span><span class="s0">;</span>
+		<span class="s1">dto.setCategories(userService.userCategoryList(id))</span><span class="s0">;</span>
+		<span class="s1">model.addAttribute(</span><span class="s3">&quot;dto&quot;</span><span class="s0">, </span><span class="s1">dto)</span><span class="s0">;</span>
+		<span class="s0">return </span><span class="s3">&quot;user/userDetail&quot;</span><span class="s0">;</span>
+	<span class="s1">}</span>
+	<span class="s1">@GetMapping(</span><span class="s3">&quot;/user/{userId}/category/{categoryId}&quot;</span><span class="s1">)</span>
+	<span class="s0">public </span><span class="s1">String userCategoryDetail(@PathVariable </span><span class="s0">int </span><span class="s1">userId</span><span class="s0">, </span><span class="s1">@PathVariable </span><span class="s0">int </span><span class="s1">categoryId</span><span class="s0">, </span><span class="s1">Model model</span><span class="s0">,</span>
+									 <span class="s1">@AuthenticationPrincipal PrincipalDetail principalDetail</span><span class="s0">,</span>
+									 <span class="s1">@PageableDefault(size = </span><span class="s4">3</span><span class="s0">, </span><span class="s1">sort = </span><span class="s3">&quot;id&quot;</span><span class="s0">, </span><span class="s1">direction = Sort.Direction.DESC) Pageable pageable) {</span>
+		<span class="s1">UserProfileDto dto = userService.userProfile(userId</span><span class="s0">, </span><span class="s1">principalDetail.getUser().getId())</span><span class="s0">;</span>
+		<span class="s1">dto.setBoards(userService.userBoardListByCategory(userId</span><span class="s0">, </span><span class="s1">categoryId</span><span class="s0">, </span><span class="s1">pageable))</span><span class="s0">;</span>
+		<span class="s1">dto.setCategories(userService.userCategoryList(userId))</span><span class="s0">;</span>
+		<span class="s1">model.addAttribute(</span><span class="s3">&quot;userId&quot;</span><span class="s0">, </span><span class="s1">userId)</span><span class="s0">;</span>
+		<span class="s1">model.addAttribute(</span><span class="s3">&quot;dto&quot;</span><span class="s0">, </span><span class="s1">dto)</span><span class="s0">;</span>
+		<span class="s0">return </span><span class="s3">&quot;user/userDetail&quot;</span><span class="s0">;</span>
+	<span class="s1">}</span>
+<span class="s2">/*  @GetMapping(&quot;/category/{parentId}/children&quot;) 
+    @ResponseBody 
+    public ResponseEntity&lt;List&lt;CategoryDto&gt;&gt; getChildCategories(@PathVariable int parentId) { 
+        try { 
+            List&lt;Category&gt; childCategories = categoryService.getChildCategories(parentId); 
+            List&lt;CategoryDto&gt; categoryDtos = childCategories.stream() 
+                    .map(category -&gt; new CategoryDto(category.getId(), category.getName())) 
+                    .collect(Collectors.toList()); 
+            return ResponseEntity.ok(categoryDtos); 
+        } catch (Exception e) { 
+            // 오류 처리 
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); 
+        } 
+    }*/</span>
+
+	<span class="s2">/*@GetMapping(&quot;/setCookie&quot;) 
+    public String setCookie(HttpServletResponse response) { 
+        Cookie cookie = new Cookie(&quot;authToken&quot;, &quot;your_token_value_here&quot;); 
+        response.addCookie(cookie); 
+        return &quot;Cookie set successfully&quot;; 
+    } 
+    @GetMapping(&quot;/readCookie&quot;) 
+    public String readCookie(@CookieValue(name = &quot;authToken&quot;, required = false) String authToken) { 
+        if (authToken != null) { 
+            return &quot;Auth Token: &quot; + authToken; 
+        } else { 
+            return &quot;Auth Token not found&quot;; 
+        } 
+    }*/</span>
+<span class="s2">/*  @GetMapping(&quot;/image/upload&quot;) 
+    public String upload() { 
+        return &quot;image/upload&quot;; 
+    }*/</span>
+
+    <span class="s1">@GetMapping(</span><span class="s3">&quot;/auth/kakao/callback&quot;</span><span class="s1">)</span>
+	<span class="s0">public </span><span class="s1">String kakaoCallback(String code) { </span><span class="s2">// Data를 리턴해주는 컨트롤러 함수</span>
+
+		<span class="s2">// POST방식으로 key=value 데이터를 요청 (카카오쪽으로)</span>
+		<span class="s2">// Retrofit2</span>
+		<span class="s2">// OkHttp</span>
+		<span class="s2">// RestTemplate</span>
+
+		<span class="s1">RestTemplate rt = </span><span class="s0">new </span><span class="s1">RestTemplate()</span><span class="s0">;</span>
+
+		<span class="s2">// HttpHeader 오브젝트 생성</span>
+		<span class="s1">HttpHeaders headers = </span><span class="s0">new </span><span class="s1">HttpHeaders()</span><span class="s0">;</span>
+		<span class="s1">headers.add(</span><span class="s3">&quot;Content-type&quot;</span><span class="s0">, </span><span class="s3">&quot;application/x-www-form-urlencoded;charset=utf-8&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+		<span class="s2">// HttpBody 오브젝트 생성</span>
+       <span class="s1">MultiValueMap&lt;String</span><span class="s0">,</span><span class="s1">String&gt; params= </span><span class="s0">new </span><span class="s1">LinkedMultiValueMap&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s1">params.add(</span><span class="s3">&quot;grant_type&quot;</span><span class="s0">,</span><span class="s3">&quot;authorization_code&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">params.add(</span><span class="s3">&quot;client_id&quot;</span><span class="s0">,</span><span class="s3">&quot;4e832c29b1a13a2c3bc9699fde40040f&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">params.add(</span><span class="s3">&quot;redirect_uri&quot;</span><span class="s0">,</span><span class="s3">&quot;http://localhost:8000/auth/kakao/callback&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">params.add(</span><span class="s3">&quot;code&quot;</span><span class="s0">,</span><span class="s1">code)</span><span class="s0">;</span>
+
+		<span class="s2">// HttpHeader와 HttpBody를 하나의 오브젝트에 담기</span>
+		<span class="s1">HttpEntity&lt;MultiValueMap&lt;String</span><span class="s0">, </span><span class="s1">String&gt;&gt; kakaoTokenRequest =</span>
+				<span class="s0">new </span><span class="s1">HttpEntity&lt;&gt;(params</span><span class="s0">, </span><span class="s1">headers)</span><span class="s0">;</span>
+
+		<span class="s2">// Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.</span>
+		<span class="s1">ResponseEntity&lt;String&gt; response = rt.exchange(</span>
+				<span class="s3">&quot;https://kauth.kakao.com/oauth/token&quot;</span><span class="s0">,</span>
+				<span class="s1">HttpMethod.POST</span><span class="s0">,</span>
+				<span class="s1">kakaoTokenRequest</span><span class="s0">,</span>
+				<span class="s1">String.</span><span class="s0">class</span>
+		<span class="s1">)</span><span class="s0">;</span>
+
+		<span class="s2">// Gson, Json Simple, ObjectMapper</span>
+		<span class="s1">ObjectMapper objectMapper = </span><span class="s0">new </span><span class="s1">ObjectMapper()</span><span class="s0">;</span>
+		<span class="s1">OauthToken oauthToken = </span><span class="s0">null;</span>
+		<span class="s0">try </span><span class="s1">{</span>
+			<span class="s1">oauthToken = objectMapper.readValue(response.getBody()</span><span class="s0">, </span><span class="s1">OauthToken.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+		<span class="s1">} </span><span class="s0">catch </span><span class="s1">(JsonMappingException e) {</span>
+			<span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+		<span class="s1">} </span><span class="s0">catch </span><span class="s1">(JsonProcessingException e) {</span>
+			<span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+		<span class="s1">}</span>
+
+		<span class="s1">System.out.println(</span><span class="s3">&quot;카카오 엑세스 토큰 : &quot;</span><span class="s1">+oauthToken.getAccess_token())</span><span class="s0">;</span>
+
+		<span class="s1">RestTemplate rt2 = </span><span class="s0">new </span><span class="s1">RestTemplate()</span><span class="s0">;</span>
+
+		<span class="s2">// HttpHeader 오브젝트 생성</span>
+		<span class="s1">HttpHeaders headers2 = </span><span class="s0">new </span><span class="s1">HttpHeaders()</span><span class="s0">;</span>
+		<span class="s1">headers2.add(</span><span class="s3">&quot;Authorization&quot;</span><span class="s0">, </span><span class="s3">&quot;Bearer &quot;</span><span class="s1">+oauthToken.getAccess_token())</span><span class="s0">;</span>
+		<span class="s1">headers2.add(</span><span class="s3">&quot;Content-type&quot;</span><span class="s0">, </span><span class="s3">&quot;application/x-www-form-urlencoded;charset=utf-8&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+		<span class="s2">// HttpHeader와 HttpBody를 하나의 오브젝트에 담기</span>
+		<span class="s1">HttpEntity&lt;MultiValueMap&lt;String</span><span class="s0">, </span><span class="s1">String&gt;&gt; kakaoProfileRequest2 =</span>
+				<span class="s0">new </span><span class="s1">HttpEntity&lt;&gt;(headers2)</span><span class="s0">;</span>
+
+		<span class="s2">// Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음.</span>
+		<span class="s1">ResponseEntity&lt;String&gt; response2 = rt2.exchange(</span>
+				<span class="s3">&quot;https://kapi.kakao.com/v2/user/me&quot;</span><span class="s0">,</span>
+				<span class="s1">HttpMethod.POST</span><span class="s0">,</span>
+				<span class="s1">kakaoProfileRequest2</span><span class="s0">,</span>
+				<span class="s1">String.</span><span class="s0">class</span>
+		<span class="s1">)</span><span class="s0">;</span>
+		<span class="s1">System.out.println(response2.getBody())</span><span class="s0">;</span>
+
+		<span class="s1">ObjectMapper objectMapper2 = </span><span class="s0">new </span><span class="s1">ObjectMapper()</span><span class="s0">;</span>
+		<span class="s1">KakaoProfile kakaoProfile = </span><span class="s0">null;</span>
+		<span class="s0">try </span><span class="s1">{</span>
+			<span class="s1">kakaoProfile = objectMapper2.readValue(response2.getBody()</span><span class="s0">, </span><span class="s1">KakaoProfile.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+		<span class="s1">} </span><span class="s0">catch </span><span class="s1">(JsonMappingException e) {</span>
+			<span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+		<span class="s1">} </span><span class="s0">catch </span><span class="s1">(JsonProcessingException e) {</span>
+			<span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+		<span class="s1">}</span>
+
+
+		<span class="s2">// UUID란 -&gt; 중복되지 않는 어떤 특정 값을 만들어내는 알고리즘</span>
+		<span class="s1">System.out.println(</span><span class="s3">&quot;블로그서버 패스워드 : &quot;</span><span class="s1">+inoKey)</span><span class="s0">;</span>
+
+		<span class="s1">User kakaoUser = User.builder()</span>
+                <span class="s1">.username(kakaoProfile.getId()+</span><span class="s3">&quot;_of_KaKao&quot;</span><span class="s1">)</span>
+				<span class="s1">.password(inoKey)</span>
+                <span class="s1">.email(</span><span class="s3">&quot;of_kakao&quot;</span><span class="s1">)</span>
+                <span class="s1">.emailCheck(EmailCheck.YES)</span>
+				<span class="s1">.oauth(</span><span class="s3">&quot;kakao&quot;</span><span class="s1">)</span>
+				<span class="s1">.build()</span><span class="s0">;</span>
+
+		<span class="s2">// 가입자 혹은 비가입자 체크 해서 처리</span>
+		<span class="s1">User originUser = userService.findUser(kakaoUser.getUsername())</span><span class="s0">;</span>
+
+		<span class="s0">if</span><span class="s1">(originUser.getUsername() == </span><span class="s0">null</span><span class="s1">) {</span>
+			<span class="s1">System.out.println(</span><span class="s3">&quot;기존 회원이 아니기에 자동 회원가입을 진행합니다&quot;</span><span class="s1">)</span><span class="s0">;</span>
+			<span class="s1">userService.save(kakaoUser)</span><span class="s0">;</span>
+		<span class="s1">}</span>
+
+		<span class="s1">System.out.println(</span><span class="s3">&quot;자동 로그인을 진행합니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+		<span class="s2">// 로그인 처리</span>
+		<span class="s1">Authentication authentication = authenticationManager.authenticate(</span><span class="s0">new </span><span class="s1">UsernamePasswordAuthenticationToken(kakaoUser.getUsername()</span><span class="s0">, </span><span class="s1">inoKey))</span><span class="s0">;</span>
+		<span class="s1">SecurityContextHolder.getContext().setAuthentication(authentication)</span><span class="s0">;</span>
+
+		<span class="s0">return </span><span class="s3">&quot;redirect:/&quot;</span><span class="s0">;</span>
+	<span class="s1">}</span>
+
+<span class="s1">}</span>
+
+
+</pre>
+</body>
+</html>

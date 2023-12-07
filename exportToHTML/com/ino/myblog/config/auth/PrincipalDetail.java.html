@@ -1,0 +1,92 @@
+<html>
+<head>
+<title>PrincipalDetail.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+PrincipalDetail.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.config.auth</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.User</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">lombok.Data</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.Getter</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.security.core.GrantedAuthority</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.security.core.userdetails.UserDetails</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Collection</span><span class="s0">;</span>
+<span class="s2">// 스프링 시큐리티가 로그인 요청을 가로채서 로그인을 진행하고 완료가 되면 UserDetails 타입의 오브젝틀를</span>
+<span class="s2">// 스프링 시큐리티의 고유한 세션저장소에 저장을 해준다.</span>
+<span class="s1">@Data</span>
+<span class="s0">public class </span><span class="s1">PrincipalDetail </span><span class="s0">implements </span><span class="s1">UserDetails {</span>
+    <span class="s0">private </span><span class="s1">User user</span><span class="s0">;</span><span class="s2">//콤포지션</span>
+
+    <span class="s0">public </span><span class="s1">PrincipalDetail(User user){</span>
+        <span class="s0">this</span><span class="s1">.user=user</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">String getPassword() {</span>
+        <span class="s0">return </span><span class="s1">user.getPassword()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">String getUsername() {</span>
+        <span class="s0">return </span><span class="s1">user.getUsername()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public </span><span class="s1">String getEmailCheck() {</span>
+        <span class="s0">return </span><span class="s1">user.getEmailCheck().name()</span><span class="s0">; </span><span class="s2">// EmailCheck enum 값을 문자열로 반환</span>
+    <span class="s1">}</span>
+    <span class="s2">//계정이 만료되지 않았는지 리턴한다 (true : 만료 안됨)</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">isAccountNonExpired() {</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+    <span class="s2">//계정이 잠겨있지 않았는지 리턴한다 (true : 잠기지 않음)</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">isAccountNonLocked() {</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">//비밀번호가 만료되지 않았는지 리턴( true : 만료안됨)</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">isCredentialsNonExpired() {</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+    <span class="s2">//계정이 활성화 인지 리턴(true 활성화)</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">isEnabled() {</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+    <span class="s2">//계정이 갖고있는 권한 목록을 리턴한다. (권한이 여러개 있을 수 있어서 루프를 돌아야하는데 우리는 한개만)</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">Collection&lt;? </span><span class="s0">extends </span><span class="s1">GrantedAuthority&gt; getAuthorities() {</span>
+        <span class="s1">Collection&lt;GrantedAuthority&gt; collectors = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+<span class="s2">/*        collectors.add(new GrantedAuthority() { 
+            @Override 
+            public String getAuthority() { 
+                return &quot;ROLE_&quot;+user.getRole();// 스프링 규칙 ROLE_USER 
+            } 
+        });*/</span>
+        <span class="s1">collectors.add(()-&gt;{</span><span class="s0">return </span><span class="s3">&quot;ROLE_&quot;</span><span class="s1">+user.getRole()</span><span class="s0">;</span><span class="s1">})</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">collectors</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public </span><span class="s1">PrincipalDetail() {</span>
+        <span class="s0">super</span><span class="s1">()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

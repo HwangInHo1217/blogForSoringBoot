@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>upload.jsp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #cc7832; font-weight: bold;}
+.s2 { color: #a9b7c6;}
+.s3 { color: #6a8759;}
+.s4 { color: #a9b7c6;}
+.s5 { color: #808080;}
+.s6 { color: #e8bf6a;}
+.s7 { color: #bababa;}
+.s8 { color: #a5c261;}
+.s9 { color: #cc7832;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+upload.jsp</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;%@ </span><span class="s1">page </span><span class="s2">language</span><span class="s0">=&quot;</span><span class="s3">java</span><span class="s0">&quot; </span><span class="s2">contentType</span><span class="s0">=&quot;</span><span class="s3">text/html; charset=UTF-8</span><span class="s0">&quot;</span>
+    <span class="s2">pageEncoding</span><span class="s0">=&quot;</span><span class="s3">UTF-8</span><span class="s0">&quot;%&gt;</span>
+	
+	<span class="s0">&lt;%@ </span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/header.jsp</span><span class="s0">&quot; %&gt;</span>
+
+    <span class="s5">&lt;!--사진 업로드페이지 중앙배치--&gt;</span>
+        <span class="s6">&lt;main </span><span class="s7">class</span><span class="s8">=&quot;uploadContainer&quot;</span><span class="s6">&gt;</span>
+           <span class="s5">&lt;!--사진업로드 박스--&gt;</span>
+            <span class="s6">&lt;section </span><span class="s7">class</span><span class="s8">=&quot;upload&quot;</span><span class="s6">&gt;</span>
+               
+               <span class="s5">&lt;!--사진업로드 로고--&gt;</span>
+                <span class="s6">&lt;div </span><span class="s7">class</span><span class="s8">=&quot;upload-top&quot;</span><span class="s6">&gt;</span>
+                    <span class="s6">&lt;a </span><span class="s7">href</span><span class="s8">=&quot;home.html&quot; </span><span class="s7">class</span><span class="s8">=&quot;&quot;</span><span class="s6">&gt;</span>
+                        <span class="s6">&lt;img </span><span class="s7">src</span><span class="s8">=&quot;/images/logo.jpg&quot; </span><span class="s7">alt</span><span class="s8">=&quot;&quot;</span><span class="s6">&gt;</span>
+                    <span class="s6">&lt;/a&gt;</span>
+                    <span class="s6">&lt;p&gt;</span><span class="s4">사진 업로드</span><span class="s6">&lt;/p&gt;</span>
+                <span class="s6">&lt;/div&gt;</span>
+                <span class="s5">&lt;!--사진업로드 로고 end--&gt;</span>
+                
+                <span class="s5">&lt;!--사진업로드 Form--&gt;</span>
+                <span class="s6">&lt;form </span><span class="s7">class</span><span class="s8">=&quot;upload-form&quot; </span><span class="s7">action</span><span class="s8">=&quot;/image&quot; </span><span class="s7">method</span><span class="s8">=&quot;post&quot; </span><span class="s7">enctype</span><span class="s8">=&quot;multipart/form-data&quot;</span><span class="s6">&gt;</span>
+                    <span class="s6">&lt;input  </span><span class="s7">type</span><span class="s8">=&quot;file&quot; </span><span class="s7">name</span><span class="s8">=&quot;file&quot;  </span><span class="s7">onchange</span><span class="s8">=&quot;</span><span class="s4">imageChoose(</span><span class="s9">this</span><span class="s4">)</span><span class="s8">&quot; </span><span class="s6">/&gt;</span>
+                    <span class="s6">&lt;div </span><span class="s7">class</span><span class="s8">=&quot;upload-img&quot;</span><span class="s6">&gt;</span>
+                        <span class="s6">&lt;img </span><span class="s7">src</span><span class="s8">=&quot;/images/person.jpeg&quot; </span><span class="s7">alt</span><span class="s8">=&quot;&quot; </span><span class="s7">id</span><span class="s8">=&quot;imageUploadPreview&quot; </span><span class="s6">/&gt;</span>
+                    <span class="s6">&lt;/div&gt;</span>
+                    
+                    <span class="s5">&lt;!--사진설명 + 업로드버튼--&gt;</span>
+                    <span class="s6">&lt;div </span><span class="s7">class</span><span class="s8">=&quot;upload-form-detail&quot;</span><span class="s6">&gt;</span>
+                   		 <span class="s6">&lt;input </span><span class="s7">type</span><span class="s8">=&quot;text&quot; </span><span class="s7">placeholder</span><span class="s8">=&quot;사진설명&quot; </span><span class="s7">name</span><span class="s8">=&quot;caption&quot; </span><span class="s6">/&gt;</span>
+                        <span class="s6">&lt;button </span><span class="s7">class</span><span class="s8">=&quot;cta blue&quot;</span><span class="s6">&gt;</span><span class="s4">업로드</span><span class="s6">&lt;/button&gt;</span>
+                    <span class="s6">&lt;/div&gt;</span>
+                    <span class="s5">&lt;!--사진설명end--&gt;</span>
+                    
+                <span class="s6">&lt;/form&gt;</span>
+                <span class="s5">&lt;!--사진업로드 Form--&gt;</span>
+            <span class="s6">&lt;/section&gt;</span>
+            <span class="s5">&lt;!--사진업로드 박스 end--&gt;</span>
+        <span class="s6">&lt;/main&gt;</span>
+        <span class="s6">&lt;br/&gt;&lt;br/&gt;</span>
+	
+	<span class="s6">&lt;script </span><span class="s7">src</span><span class="s8">=&quot;/js/upload.js&quot; </span><span class="s6">&gt;&lt;/script&gt;</span>
+    <span class="s0">&lt;%@ </span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/footer.jsp</span><span class="s0">&quot; %&gt;</span></pre>
+</body>
+</html>

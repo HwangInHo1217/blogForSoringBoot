@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>loginForm.jsp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #cc7832; font-weight: bold;}
+.s2 { color: #a9b7c6;}
+.s3 { color: #6a8759;}
+.s4 { color: #a9b7c6;}
+.s5 { color: #e8bf6a;}
+.s6 { color: #bababa;}
+.s7 { color: #a5c261;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+loginForm.jsp</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;%@</span><span class="s1">page </span><span class="s2">language</span><span class="s0">=&quot;</span><span class="s3">java</span><span class="s0">&quot; </span><span class="s2">contentType</span><span class="s0">=&quot;</span><span class="s3">text/html; charset=UTF-8</span><span class="s0">&quot;</span>
+        <span class="s2">pageEncoding</span><span class="s0">=&quot;</span><span class="s3">UTF-8</span><span class="s0">&quot;%&gt;</span>
+
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/header.jsp</span><span class="s0">&quot;%&gt;</span>
+<span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;container&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;form </span><span class="s6">action</span><span class="s7">=&quot;/auth/loginProc&quot; </span><span class="s6">method</span><span class="s7">=&quot;post&quot;</span><span class="s5">&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;form-group&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;label </span><span class="s6">for</span><span class="s7">=&quot;username&quot;</span><span class="s5">&gt;</span><span class="s4">아이디:</span><span class="s5">&lt;/label&gt;</span>
+            <span class="s5">&lt;input </span><span class="s6">type</span><span class="s7">=&quot;text&quot; </span><span class="s6">name</span><span class="s7">=&quot;username&quot;</span><span class="s6">class</span><span class="s7">=&quot;form-control&quot; </span><span class="s6">placeholder</span><span class="s7">=&quot;아이디 입력&quot; </span><span class="s6">id</span><span class="s7">=&quot;username&quot;</span><span class="s5">&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;form-group&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;label </span><span class="s6">for</span><span class="s7">=&quot;password&quot;</span><span class="s5">&gt;</span><span class="s4">비밀번호:</span><span class="s5">&lt;/label&gt;</span>
+            <span class="s5">&lt;input </span><span class="s6">type</span><span class="s7">=&quot;password&quot;  </span><span class="s6">name</span><span class="s7">=&quot;password&quot; </span><span class="s6">class</span><span class="s7">=&quot;form-control&quot; </span><span class="s6">placeholder</span><span class="s7">=&quot;비밀번호 입력&quot; </span><span class="s6">id</span><span class="s7">=&quot;password&quot;</span><span class="s5">&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+
+        <span class="s5">&lt;button </span><span class="s6">id</span><span class="s7">=&quot;btn-login&quot; </span><span class="s6">class</span><span class="s7">=&quot;btn btn-primary&quot;</span><span class="s5">&gt;</span><span class="s4">로그인</span><span class="s5">&lt;/button&gt;</span>
+        <span class="s5">&lt;a </span><span class="s6">href</span><span class="s7">=&quot;https://kauth.kakao.com/oauth/authorize?client_id=4e832c29b1a13a2c3bc9699fde40040f&amp;redirect_uri=http://localhost:8000/auth/kakao/callback&amp;response_type=code&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;img </span><span class="s6">height</span><span class="s7">=&quot;38&quot; </span><span class="s6">src</span><span class="s7">=&quot;/image/kakao_login_button.png&quot; </span><span class="s5">/&gt;</span>
+        <span class="s5">&lt;/a&gt;</span>
+    <span class="s5">&lt;/form&gt;</span>
+
+<span class="s5">&lt;/div&gt;</span>
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/footer.jsp</span><span class="s0">&quot;%&gt;</span>
+
+
+</pre>
+</body>
+</html>

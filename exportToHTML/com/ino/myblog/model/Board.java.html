@@ -1,0 +1,89 @@
+<html>
+<head>
+<title>Board.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Board.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.model</span><span class="s0">;</span>
+
+
+<span class="s0">import </span><span class="s1">com.fasterxml.jackson.annotation.JsonIdentityInfo</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.fasterxml.jackson.annotation.JsonIgnoreProperties</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.fasterxml.jackson.annotation.ObjectIdGenerators</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.AllArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.Builder</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.Data</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.NoArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.hibernate.annotations.ColumnDefault</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.hibernate.annotations.CreationTimestamp</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javax.persistence.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.sql.Timestamp</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+
+<span class="s1">@JsonIdentityInfo(</span>
+        <span class="s1">generator = ObjectIdGenerators.PropertyGenerator.</span><span class="s0">class,</span>
+        <span class="s1">property = </span><span class="s2">&quot;id&quot;</span><span class="s1">)</span>
+<span class="s1">@Data</span>
+<span class="s1">@NoArgsConstructor</span>
+<span class="s1">@AllArgsConstructor</span>
+<span class="s1">@Builder</span>
+<span class="s1">@Entity</span>
+<span class="s0">public class </span><span class="s1">Board {</span>
+
+    <span class="s1">@Id</span>
+    <span class="s1">@GeneratedValue(strategy = GenerationType.IDENTITY)</span>
+    <span class="s0">private int </span><span class="s1">id</span><span class="s0">;</span>
+
+    <span class="s1">@Column(nullable = </span><span class="s0">false,</span><span class="s1">length = </span><span class="s3">100</span><span class="s1">)</span>
+    <span class="s0">private  </span><span class="s1">String title</span><span class="s0">;</span>
+    <span class="s1">@Lob </span><span class="s4">// 대용량데이터 처리</span>
+    <span class="s0">private </span><span class="s1">String content</span><span class="s0">;</span><span class="s4">//섬머노트 라이브러리 내용이 html 태그가 섞여 디자인되서 용량이 커지기 때문</span>
+
+
+    <span class="s0">private int </span><span class="s1">count</span><span class="s0">;</span><span class="s4">//조회수</span>
+
+    <span class="s1">@ManyToOne(fetch = FetchType.EAGER) </span><span class="s4">// 다대일 -&gt; 다 = board 1 = user 즉 한명의 유저는 여러 게시글 작성 가능</span>
+    <span class="s1">@JoinColumn(name=</span><span class="s2">&quot;userId&quot;</span><span class="s1">)</span>
+    <span class="s1">@JsonIgnoreProperties({</span><span class="s2">&quot;boards&quot;</span><span class="s1">})</span>
+    <span class="s0">private </span><span class="s1">User user</span><span class="s0">; </span><span class="s4">// DB는 오브젝트를 저장 못함. 자바는 오브젝트 저장 가능</span>
+
+    <span class="s1">@OneToMany(mappedBy = </span><span class="s2">&quot;board&quot;</span><span class="s0">,</span><span class="s1">fetch = FetchType.EAGER</span><span class="s0">, </span><span class="s1">cascade = CascadeType.REMOVE) </span><span class="s4">//mappedby 는 연관관계의 주인이 아니다(FK아님) db에 컬럼 만들지마 스프링아</span>
+    <span class="s1">@JsonIgnoreProperties({</span><span class="s2">&quot;board&quot;</span><span class="s1">})</span>
+    <span class="s1">@OrderBy(</span><span class="s2">&quot;id desc&quot;</span><span class="s1">)</span>
+    <span class="s0">private </span><span class="s1">List&lt;Reply&gt; replys</span><span class="s0">;</span>
+
+    <span class="s1">@CreationTimestamp</span>
+    <span class="s0">private </span><span class="s1">Timestamp createDate</span><span class="s0">;</span>
+
+    <span class="s1">@ManyToOne(fetch = FetchType.LAZY)</span>
+    <span class="s1">@JoinColumn(name = </span><span class="s2">&quot;category_id&quot;</span><span class="s1">) </span><span class="s4">// 실제 테이블에 생성될 외래키 컬럼명</span>
+    <span class="s0">private </span><span class="s1">Category category</span><span class="s0">;</span>
+
+    <span class="s1">@JsonIgnoreProperties({</span><span class="s2">&quot;board&quot;</span><span class="s1">})</span>
+    <span class="s1">@OneToMany(mappedBy = </span><span class="s2">&quot;board&quot;</span><span class="s0">, </span><span class="s1">cascade = CascadeType.ALL)</span>
+    <span class="s0">private </span><span class="s1">List&lt;Likes&gt; likes</span><span class="s0">;</span>
+    <span class="s1">@Transient </span><span class="s4">// DB에 칼럼이 만들어지지 않는다.</span>
+    <span class="s0">private boolean </span><span class="s1">likeState</span><span class="s0">;</span>
+
+    <span class="s1">@Transient</span>
+    <span class="s0">private int </span><span class="s1">likeCount</span><span class="s0">;</span>
+
+    <span class="s1">@Transient</span>
+    <span class="s0">private  int </span><span class="s1">replyCount</span><span class="s0">;</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<html>
+<head>
+<title>UserService.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+UserService.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.service</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.dto.UserProfileDto</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.handler.CustomException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.*</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.BoardRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.CategoryRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.SubscribeRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.UserRepository</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">lombok.RequiredArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.beans.factory.annotation.Autowired</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">org.springframework.beans.factory.annotation.Value</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.domain.Page</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.domain.Pageable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.mail.javamail.JavaMailSender</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.mail.javamail.MimeMessageHelper</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.stereotype.Service</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.transaction.annotation.Transactional</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.web.bind.annotation.CookieValue</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.web.multipart.MultipartFile</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javax.mail.MessagingException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javax.mail.internet.MimeMessage</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.nio.file.Files</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.nio.file.Path</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.nio.file.Paths</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.UUID</span><span class="s0">;</span>
+
+<span class="s1">@Service</span>
+<span class="s1">@RequiredArgsConstructor</span>
+<span class="s0">public class </span><span class="s1">UserService {</span>
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">UserRepository userRespository</span><span class="s0">;</span>
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">BCryptPasswordEncoder encoder</span><span class="s0">;</span>
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">BoardRepository boardRepository</span><span class="s0">;</span>
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">CategoryRepository categoryRepository</span><span class="s0">;</span>
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">JavaMailSender emailSender</span><span class="s0">;</span>
+    <span class="s0">private final </span><span class="s1">SubscribeRepository subscribeRepository</span><span class="s0">;</span>
+
+    <span class="s1">@Value(</span><span class="s2">&quot;${file.path}&quot;</span><span class="s1">)</span>
+    <span class="s0">private </span><span class="s1">String uploadFolder</span><span class="s0">;</span>
+    <span class="s1">@Transactional(readOnly = </span><span class="s0">true</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">User findUser(String username){</span>
+        <span class="s1">User user =userRespository.findByUsername(username).orElseGet(()-&gt;</span>
+        <span class="s1">{</span>
+            <span class="s0">return new </span><span class="s1">User()</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">user</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional</span><span class="s3">//select 시 트랜잭션 시작, 서비스 종료시에 트랜잭션 종료( 정합성 )</span>
+    <span class="s0">public void </span><span class="s1">save(User user){</span>
+        <span class="s1">String rawPassword=user.getPassword()</span><span class="s0">;</span>
+        <span class="s1">String encPassword= encoder.encode(rawPassword)</span><span class="s0">;</span>
+        <span class="s1">user.setPassword(encPassword)</span><span class="s0">;</span>
+        <span class="s1">user.setRole(RoleType.USER)</span><span class="s0">;</span>
+        <span class="s3">//user.setProfileImageUrl(&quot;&quot;);</span>
+        <span class="s0">if</span><span class="s1">(user.getEmail()!=</span><span class="s2">&quot;of_kakao&quot;</span><span class="s1">)</span>
+            <span class="s1">user.setEmailCheck(EmailCheck.NO)</span><span class="s0">;</span>
+        <span class="s1">userRespository.save(user)</span><span class="s0">;</span>
+        <span class="s1">Category defaultCategory = </span><span class="s0">new </span><span class="s1">Category()</span><span class="s0">;</span>
+        <span class="s1">defaultCategory.setName(</span><span class="s2">&quot;기본 카테고리&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">defaultCategory.setUser(user)</span><span class="s0">; </span><span class="s3">// 새로 생성된 사용자에 할당</span>
+        <span class="s1">categoryRepository.save(defaultCategory)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional</span>
+    <span class="s0">public void </span><span class="s1">userUpdate(User user){</span>
+        <span class="s3">//수정시에는 영속성 컨텍스트 User 오브젝트를 영속화 시키고, 영속화 된 User 오브젝트를 수정하면됨</span>
+        <span class="s3">//select를 해서 user오브젝트를 db로 부터 가져온는 이유는 영속화를 하기 위해서</span>
+        <span class="s3">//영속화 된 오브젝트를 변경하면 자동으로 db에 update문을 날려줌</span>
+        <span class="s1">User persistance = userRespository.findById(user.getId()).orElseThrow(()-&gt;{</span>
+            <span class="s0">return new </span><span class="s1">IllegalArgumentException(</span><span class="s2">&quot;회원찾기 실패&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s3">//Validate 체크 post 공격 방지</span>
+        <span class="s0">if</span><span class="s1">(persistance.getOauth()==</span><span class="s0">null </span><span class="s1">|| persistance.getOauth().equals(</span><span class="s2">&quot;&quot;</span><span class="s1">)){</span>
+            <span class="s0">if</span><span class="s1">(user.getPassword()!=</span><span class="s0">null </span><span class="s1">&amp;&amp; !user.getPassword().isEmpty()) {</span>
+                <span class="s1">String rawPassword = user.getPassword()</span><span class="s0">;</span>
+                <span class="s1">String encPaswword = encoder.encode(rawPassword)</span><span class="s0">;</span>
+                <span class="s1">persistance.setPassword(encPaswword)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+            <span class="s1">persistance.setEmail(user.getEmail())</span><span class="s0">;</span>
+            <span class="s1">persistance.setBio(user.getBio())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s3">//회원 수정 함수 종료=서비스종료 = 트랜잭션 종료 = commit됨</span>
+    <span class="s1">}</span>
+    <span class="s0">public void </span><span class="s1">sendVerificationEmail(String to</span><span class="s0">, </span><span class="s1">String token) {</span>
+        <span class="s1">String verificationLink = </span><span class="s2">&quot;http://localhost:8000/auth/verify?token=&quot; </span><span class="s1">+ token</span><span class="s0">;</span>
+        <span class="s1">MimeMessage mimeMessage = emailSender.createMimeMessage()</span><span class="s0">;</span>
+        <span class="s1">MimeMessageHelper helper = </span><span class="s0">new </span><span class="s1">MimeMessageHelper(mimeMessage</span><span class="s0">, </span><span class="s2">&quot;utf-8&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">String htmlMsg = </span><span class="s2">&quot;&lt;h3&gt;이메일 인증&lt;/h3&gt;&quot;</span>
+                <span class="s1">+ </span><span class="s2">&quot;&lt;p&gt;아래의 링크를 클릭하여 이메일 인증을 완료해주세요:&lt;/p&gt;&quot;</span>
+                <span class="s1">+ </span><span class="s2">&quot;&lt;a href='&quot; </span><span class="s1">+ verificationLink + </span><span class="s2">&quot;'&gt;이메일 인증하기&lt;/a&gt;&quot;</span><span class="s0">;</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">helper.setText(htmlMsg</span><span class="s0">, true</span><span class="s1">)</span><span class="s0">; </span><span class="s3">// true를 설정하여 HTML 형식으로 전송</span>
+            <span class="s1">helper.setTo(to)</span><span class="s0">;</span>
+            <span class="s1">helper.setSubject(</span><span class="s2">&quot;졸업작품 테스트) 블로그 이메일 인증 메일입니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">helper.setFrom(</span><span class="s2">&quot;hih1217@skuniv.ac.kr&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(MessagingException e) {</span>
+            <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">emailSender.send(mimeMessage)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional</span>
+    <span class="s0">public boolean </span><span class="s1">verifyUser(String emailHash) {</span>
+        <span class="s3">// 데이터베이스에서 이메일 해시로 사용자를 찾습니다.</span>
+        <span class="s1">User user = userRespository.findByEmailHash(emailHash)</span><span class="s0">;</span>
+
+        <span class="s0">if </span><span class="s1">(user != </span><span class="s0">null</span><span class="s1">) {</span>
+            <span class="s3">// 사용자를 찾았으면 인증 상태를 업데이트합니다.</span>
+            <span class="s1">user.setEmailCheck(EmailCheck.YES)</span><span class="s0">;</span>
+            <span class="s1">userRespository.save(user)</span><span class="s0">;</span>
+            <span class="s0">return true;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s3">// 사용자를 찾지 못했으면 false를 반환합니다.</span>
+            <span class="s1">user.setEmailCheck(EmailCheck.NO)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional(readOnly = </span><span class="s0">true</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">UserProfileDto userProfile(</span><span class="s0">int </span><span class="s1">pageUserId</span><span class="s0">, int </span><span class="s1">principalId) {</span>
+        <span class="s1">UserProfileDto dto = </span><span class="s0">new </span><span class="s1">UserProfileDto()</span><span class="s0">;</span>
+
+        <span class="s3">// SELECT * FROM image WHERE userId = :userId;</span>
+        <span class="s1">User userEntity = userRespository.findById(pageUserId).orElseThrow(()-&gt; {</span>
+            <span class="s3">// throw -&gt; return 으로 변경</span>
+            <span class="s0">return new </span><span class="s1">CustomException(</span><span class="s2">&quot;해당 프로필 페이지는 없는 페이지입니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+
+        <span class="s1">dto.setUser(userEntity)</span><span class="s0">;</span>
+        <span class="s1">dto.setPageOwnerState(pageUserId == principalId)</span><span class="s0">;</span>
+        <span class="s1">dto.setBoardCount(userEntity.getBoards().size())</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">subscribeState =  subscribeRepository.mSubscribeState(principalId</span><span class="s0">, </span><span class="s1">pageUserId)</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">subscribeCount = subscribeRepository.mSubscribeCount(pageUserId)</span><span class="s0">;</span>
+
+        <span class="s1">dto.setSubscribeState(subscribeState == </span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">dto.setSubscribeCount(subscribeCount)</span><span class="s0">;</span>
+
+        <span class="s3">// 좋아요 카운트 추가하기</span>
+        <span class="s1">userEntity.getBoards().forEach((board)-&gt;{</span>
+            <span class="s1">board.setLikeCount(board.getLikes().size())</span><span class="s0">;</span>
+            <span class="s1">board.setReplyCount(board.getReplys().size())</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+
+
+        <span class="s0">return </span><span class="s1">dto</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional(readOnly = </span><span class="s0">true</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">Page&lt;Board&gt; userBoardList(</span><span class="s0">int </span><span class="s1">id</span><span class="s0">, </span><span class="s1">Pageable pageable){</span>
+        <span class="s0">return </span><span class="s1">boardRepository.findByUserId(id</span><span class="s0">,</span><span class="s1">pageable)</span><span class="s0">;</span>
+     <span class="s1">}</span>
+    <span class="s1">@Transactional(readOnly = </span><span class="s0">true</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">List&lt;Category&gt; userCategoryList(</span><span class="s0">int </span><span class="s1">id){</span>
+        <span class="s0">return </span><span class="s1">categoryRepository.findByUserId(id)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional(readOnly = </span><span class="s0">true</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">Page&lt;Board&gt; boardUserSearchList(String searchKeyword</span><span class="s0">, </span><span class="s1">Pageable pageable) {</span>
+        <span class="s0">return </span><span class="s1">boardRepository.findByUser_UsernameContaining(searchKeyword</span><span class="s0">, </span><span class="s1">pageable)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional(readOnly = </span><span class="s0">true</span><span class="s1">)</span>
+    <span class="s0">public </span><span class="s1">Page&lt;Board&gt; userBoardListByCategory(</span><span class="s0">int </span><span class="s1">userId</span><span class="s0">, int </span><span class="s1">categoryId</span><span class="s0">, </span><span class="s1">Pageable pageable) {</span>
+        <span class="s0">return </span><span class="s1">boardRepository.findByUserIdAndCategoryId(userId</span><span class="s0">, </span><span class="s1">categoryId</span><span class="s0">, </span><span class="s1">pageable)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional</span>
+    <span class="s0">public </span><span class="s1">User userProfileImageUpdate(</span><span class="s0">int </span><span class="s1">principalId</span><span class="s0">, </span><span class="s1">MultipartFile profileImageFile) {</span>
+        <span class="s1">UUID uuid = UUID.randomUUID()</span><span class="s0">; </span><span class="s3">// uuid</span>
+        <span class="s1">String imageFileName = uuid+</span><span class="s2">&quot;_&quot;</span><span class="s1">+profileImageFile.getOriginalFilename()</span><span class="s0">; </span><span class="s3">// 1.jpg</span>
+        <span class="s1">System.out.println(</span><span class="s2">&quot;이미지 파일이름 : &quot;</span><span class="s1">+imageFileName)</span><span class="s0">;</span>
+
+        <span class="s1">Path imageFilePath = Paths.get(uploadFolder+imageFileName)</span><span class="s0">;</span>
+
+        <span class="s3">// 통신, I/O -&gt; 예외가 발생할 수 있다.</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">Files.write(imageFilePath</span><span class="s0">, </span><span class="s1">profileImageFile.getBytes())</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(Exception e) {</span>
+            <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s1">User userEntity = userRespository.findById(principalId).orElseThrow(()-&gt;{</span>
+            <span class="s3">// throw -&gt; return 으로 변경</span>
+            <span class="s0">return new </span><span class="s1">CustomException(</span><span class="s2">&quot;유저를 찾을 수 없습니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">userEntity.setProfileImageUrl(imageFileName)</span><span class="s0">;</span>
+
+        <span class="s0">return </span><span class="s1">userEntity</span><span class="s0">;</span>
+    <span class="s1">} </span><span class="s3">// 더티체킹으로 업데이트 됨.</span>
+
+<span class="s1">}</span>
+<span class="s3">/*서비스가 필요한 이유 
+*   트랜젝션 관리 
+* 서비스 의미*/</span></pre>
+</body>
+</html>

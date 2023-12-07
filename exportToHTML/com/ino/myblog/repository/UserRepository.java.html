@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>UserRepository.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+UserRepository.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.repository</span><span class="s0">;</span>
+
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.User</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.data.jpa.repository.JpaRepository</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.Optional</span><span class="s0">;</span>
+
+
+<span class="s2">//DAO</span>
+<span class="s2">//자동으로 bean으로 등록</span>
+<span class="s2">//@Repository 생략가능</span>
+<span class="s2">//@Autowired //의존성 주입</span>
+<span class="s0">public interface </span><span class="s1">UserRepository </span><span class="s0">extends </span><span class="s1">JpaRepository&lt;User</span><span class="s0">, </span><span class="s1">Integer&gt; {</span>
+    <span class="s2">//Select * from user where username = 1?</span>
+    <span class="s1">Optional&lt;User&gt; findByUsername(String username)</span><span class="s0">;</span>
+    <span class="s1">User findByEmailHash(String emailHash)</span><span class="s0">;</span>
+<span class="s1">}</span>
+<span class="s2">//JPA Naming 쿼리</span>
+<span class="s2">//select * from user where username = ? and password = ?;</span>
+<span class="s2">//User findByUsernameAndPassword(String username, String password);</span>
+
+
+  <span class="s2">/*  @Query(value = &quot;select * from user where username = ? and password = ?&quot;,nativeQuery = true) 
+    User login(String username, String password);*/</span></pre>
+</body>
+</html>

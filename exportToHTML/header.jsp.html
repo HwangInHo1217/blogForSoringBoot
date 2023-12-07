@@ -1,0 +1,96 @@
+<html>
+<head>
+<title>header.jsp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #cc7832; font-weight: bold;}
+.s2 { color: #a9b7c6;}
+.s3 { color: #6a8759;}
+.s4 { color: #a9b7c6;}
+.s5 { color: #e8bf6a;}
+.s6 { color: #bababa;}
+.s7 { color: #a5c261;}
+.s8 { color: #808080;}
+.s9 { color: #cc7832;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+header.jsp</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;%@</span><span class="s1">page </span><span class="s2">language</span><span class="s0">=&quot;</span><span class="s3">java</span><span class="s0">&quot; </span><span class="s2">contentType</span><span class="s0">=&quot;</span><span class="s3">text/html; charset=UTF-8</span><span class="s0">&quot;</span>
+        <span class="s2">pageEncoding</span><span class="s0">=&quot;</span><span class="s3">UTF-8</span><span class="s0">&quot;%&gt;</span>
+<span class="s0">&lt;%@ </span><span class="s1">taglib </span><span class="s2">prefix</span><span class="s0">=&quot;</span><span class="s3">c</span><span class="s0">&quot; </span><span class="s2">uri</span><span class="s0">=&quot;</span><span class="s3">http://java.sun.com/jsp/jstl/core</span><span class="s0">&quot;%&gt;</span>
+<span class="s0">&lt;%@ </span><span class="s1">taglib </span><span class="s2">prefix</span><span class="s0">=&quot;</span><span class="s3">sec</span><span class="s0">&quot; </span><span class="s2">uri</span><span class="s0">=&quot;</span><span class="s3">http://www.springframework.org/security/tags</span><span class="s0">&quot; %&gt;</span>
+
+<span class="s0">&lt;</span><span class="s1">sec:authorize </span><span class="s2">access</span><span class="s3">=&quot;isAuthenticated()&quot;</span><span class="s0">&gt;</span>
+    <span class="s0">&lt;</span><span class="s1">sec:authentication </span><span class="s2">property</span><span class="s3">=&quot;principal&quot; </span><span class="s2">var</span><span class="s3">=&quot;principal&quot;</span><span class="s0">/&gt;</span>
+<span class="s0">&lt;/</span><span class="s1">sec:authorize</span><span class="s0">&gt;</span>
+
+
+<span class="s5">&lt;!DOCTYPE </span><span class="s6">html</span><span class="s5">&gt;</span>
+<span class="s5">&lt;html </span><span class="s6">lang</span><span class="s7">=&quot;utf-8&quot;</span><span class="s5">&gt;</span>
+<span class="s5">&lt;head&gt;</span>
+    <span class="s5">&lt;title&gt;</span><span class="s4">Graduation work</span><span class="s5">&lt;/title&gt;</span>
+    <span class="s5">&lt;meta </span><span class="s6">charset</span><span class="s7">=&quot;utf-8&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;meta </span><span class="s6">name</span><span class="s7">=&quot;viewport&quot; </span><span class="s6">content</span><span class="s7">=&quot;width=device-width, initial-scale=1&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;link </span><span class="s6">rel</span><span class="s7">=&quot;stylesheet&quot; </span><span class="s6">href</span><span class="s7">=&quot;https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;script </span><span class="s6">src</span><span class="s7">=&quot;https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js&quot;</span><span class="s5">&gt;&lt;/script&gt;</span>
+    <span class="s5">&lt;script </span><span class="s6">src</span><span class="s7">=&quot;https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js&quot;</span><span class="s5">&gt;&lt;/script&gt;</span>
+    <span class="s5">&lt;script </span><span class="s6">src</span><span class="s7">=&quot;https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js&quot;</span><span class="s5">&gt;&lt;/script&gt;</span>
+    <span class="s5">&lt;link </span><span class="s6">href</span><span class="s7">=&quot;https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css&quot; </span><span class="s6">rel</span><span class="s7">=&quot;stylesheet&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;script </span><span class="s6">src</span><span class="s7">=&quot;https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js&quot;</span><span class="s5">&gt;&lt;/script&gt;</span>
+<span class="s8">&lt;%-- 
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js&quot;&gt;&lt;/script&gt; 
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js&quot;&gt;&lt;/script&gt; 
+--%&gt;</span>
+
+
+<span class="s5">&lt;/head&gt;</span>
+<span class="s5">&lt;body&gt;</span>
+
+<span class="s5">&lt;nav </span><span class="s6">class</span><span class="s7">=&quot;navbar navbar-expand-md bg-dark navbar-dark&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;a </span><span class="s6">class</span><span class="s7">=&quot;navbar-brand&quot; </span><span class="s6">href</span><span class="s7">=&quot;/&quot;</span><span class="s5">&gt;</span><span class="s4">Home</span><span class="s5">&lt;/a&gt;</span>
+    <span class="s5">&lt;button </span><span class="s6">class</span><span class="s7">=&quot;navbar-toggler&quot; </span><span class="s6">type</span><span class="s7">=&quot;button&quot; </span><span class="s6">data-toggle</span><span class="s7">=&quot;collapse&quot; </span><span class="s6">data-target</span><span class="s7">=&quot;#collapsibleNavbar&quot;</span><span class="s5">&gt;</span>
+        <span class="s5">&lt;span </span><span class="s6">class</span><span class="s7">=&quot;navbar-toggler-icon&quot;</span><span class="s5">&gt;&lt;/span&gt;</span>
+    <span class="s5">&lt;/button&gt;</span>
+    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;collapse navbar-collapse&quot; </span><span class="s6">id</span><span class="s7">=&quot;collapsibleNavbar&quot;</span><span class="s5">&gt;</span>
+
+        <span class="s0">&lt;</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:when </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s9">${empty </span><span class="s2">principal</span><span class="s9">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                <span class="s5">&lt;ul </span><span class="s6">class</span><span class="s7">=&quot;navbar-nav&quot;</span><span class="s5">&gt;</span>
+                    <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;nav-item&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;a </span><span class="s6">class</span><span class="s7">=&quot;nav-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;/auth/loginForm&quot;</span><span class="s5">&gt;</span><span class="s4">로그인</span><span class="s5">&lt;/a&gt;</span>
+                    <span class="s5">&lt;/li&gt;</span>
+                    <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;nav-item&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;a </span><span class="s6">class</span><span class="s7">=&quot;nav-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;/auth/joinForm&quot;</span><span class="s5">&gt;</span><span class="s4">회원가입</span><span class="s5">&lt;/a&gt;</span>
+                    <span class="s5">&lt;/li&gt;</span>
+                <span class="s5">&lt;/ul&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:when</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                <span class="s5">&lt;ul </span><span class="s6">class</span><span class="s7">=&quot;navbar-nav&quot;</span><span class="s5">&gt;</span>
+                    <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;nav-item&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;a </span><span class="s6">class</span><span class="s7">=&quot;nav-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;/board/saveForm&quot;</span><span class="s5">&gt;</span><span class="s4">글 작성</span><span class="s5">&lt;/a&gt;</span>
+                    <span class="s5">&lt;/li&gt;</span>
+                    <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;nav-item&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;a </span><span class="s6">class</span><span class="s7">=&quot;nav-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;/user/updateForm&quot;</span><span class="s5">&gt;</span><span class="s4">회원정보</span><span class="s5">&lt;/a&gt;</span>
+                    <span class="s5">&lt;/li&gt;</span>
+                    <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;nav-item&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;a </span><span class="s6">class</span><span class="s7">=&quot;nav-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;/user/</span><span class="s9">${</span><span class="s2">principal</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s9">}</span><span class="s7">&quot;</span><span class="s5">&gt;</span><span class="s4">내 블로그</span><span class="s5">&lt;/a&gt;</span>
+                    <span class="s5">&lt;/li&gt;</span>
+                    <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;nav-item&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;a </span><span class="s6">class</span><span class="s7">=&quot;nav-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;/logout&quot;</span><span class="s5">&gt;</span><span class="s4">로그아웃</span><span class="s5">&lt;/a&gt;</span>
+                    <span class="s5">&lt;/li&gt;</span>
+                <span class="s5">&lt;/ul&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+        <span class="s0">&lt;/</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+
+    <span class="s5">&lt;/div&gt;</span>
+<span class="s5">&lt;/nav&gt;</span>
+
+<span class="s5">&lt;br/&gt;</span></pre>
+</body>
+</html>

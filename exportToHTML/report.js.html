@@ -1,0 +1,214 @@
+<html>
+<head>
+<title>report.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #cc7832;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+report.js</font>
+</center></td></tr></table>
+<pre><span class="s0">(</span><span class="s1">function </span><span class="s0">(window</span><span class="s1">, </span><span class="s0">document) {</span>
+    <span class="s2">&quot;use strict&quot;</span><span class="s1">;</span>
+
+    <span class="s1">var </span><span class="s0">tabs = {}</span><span class="s1">;</span>
+
+    <span class="s1">function </span><span class="s0">changeElementClass(element</span><span class="s1">, </span><span class="s0">classValue) {</span>
+        <span class="s1">if </span><span class="s0">(element.getAttribute(</span><span class="s2">&quot;className&quot;</span><span class="s0">)) {</span>
+            <span class="s0">element.setAttribute(</span><span class="s2">&quot;className&quot;</span><span class="s1">, </span><span class="s0">classValue)</span><span class="s1">;</span>
+        <span class="s0">} </span><span class="s1">else </span><span class="s0">{</span>
+            <span class="s0">element.setAttribute(</span><span class="s2">&quot;class&quot;</span><span class="s1">, </span><span class="s0">classValue)</span><span class="s1">;</span>
+        <span class="s0">}</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">getClassAttribute(element) {</span>
+        <span class="s1">if </span><span class="s0">(element.getAttribute(</span><span class="s2">&quot;className&quot;</span><span class="s0">)) {</span>
+            <span class="s1">return </span><span class="s0">element.getAttribute(</span><span class="s2">&quot;className&quot;</span><span class="s0">)</span><span class="s1">;</span>
+        <span class="s0">} </span><span class="s1">else </span><span class="s0">{</span>
+            <span class="s1">return </span><span class="s0">element.getAttribute(</span><span class="s2">&quot;class&quot;</span><span class="s0">)</span><span class="s1">;</span>
+        <span class="s0">}</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">addClass(element</span><span class="s1">, </span><span class="s0">classValue) {</span>
+        <span class="s0">changeElementClass(element</span><span class="s1">, </span><span class="s0">getClassAttribute(element) + </span><span class="s2">&quot; &quot; </span><span class="s0">+ classValue)</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">removeClass(element</span><span class="s1">, </span><span class="s0">classValue) {</span>
+        <span class="s0">changeElementClass(element</span><span class="s1">, </span><span class="s0">getClassAttribute(element).replace(classValue</span><span class="s1">, </span><span class="s2">&quot;&quot;</span><span class="s0">))</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">initTabs() {</span>
+        <span class="s1">var </span><span class="s0">container = document.getElementById(</span><span class="s2">&quot;tabs&quot;</span><span class="s0">)</span><span class="s1">;</span>
+
+        <span class="s0">tabs.tabs = findTabs(container)</span><span class="s1">;</span>
+        <span class="s0">tabs.titles = findTitles(tabs.tabs)</span><span class="s1">;</span>
+        <span class="s0">tabs.headers = findHeaders(container)</span><span class="s1">;</span>
+        <span class="s0">tabs.select = select</span><span class="s1">;</span>
+        <span class="s0">tabs.deselectAll = deselectAll</span><span class="s1">;</span>
+        <span class="s0">tabs.select(</span><span class="s3">0</span><span class="s0">)</span><span class="s1">;</span>
+
+        <span class="s1">return true;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">getCheckBox() {</span>
+        <span class="s1">return </span><span class="s0">document.getElementById(</span><span class="s2">&quot;line-wrapping-toggle&quot;</span><span class="s0">)</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">getLabelForCheckBox() {</span>
+        <span class="s1">return </span><span class="s0">document.getElementById(</span><span class="s2">&quot;label-for-line-wrapping-toggle&quot;</span><span class="s0">)</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">findCodeBlocks() {</span>
+        <span class="s1">var </span><span class="s0">spans = document.getElementById(</span><span class="s2">&quot;tabs&quot;</span><span class="s0">).getElementsByTagName(</span><span class="s2">&quot;span&quot;</span><span class="s0">)</span><span class="s1">;</span>
+        <span class="s1">var </span><span class="s0">codeBlocks = []</span><span class="s1">;</span>
+        <span class="s1">for </span><span class="s0">(</span><span class="s1">var </span><span class="s0">i = </span><span class="s3">0</span><span class="s1">; </span><span class="s0">i &lt; spans.length</span><span class="s1">; </span><span class="s0">++i) {</span>
+            <span class="s1">if </span><span class="s0">(spans[i].className.indexOf(</span><span class="s2">&quot;code&quot;</span><span class="s0">) &gt;= </span><span class="s3">0</span><span class="s0">) {</span>
+                <span class="s0">codeBlocks.push(spans[i])</span><span class="s1">;</span>
+            <span class="s0">}</span>
+        <span class="s0">}</span>
+        <span class="s1">return </span><span class="s0">codeBlocks</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">forAllCodeBlocks(operation) {</span>
+        <span class="s1">var </span><span class="s0">codeBlocks = findCodeBlocks()</span><span class="s1">;</span>
+
+        <span class="s1">for </span><span class="s0">(</span><span class="s1">var </span><span class="s0">i = </span><span class="s3">0</span><span class="s1">; </span><span class="s0">i &lt; codeBlocks.length</span><span class="s1">; </span><span class="s0">++i) {</span>
+            <span class="s0">operation(codeBlocks[i]</span><span class="s1">, </span><span class="s2">&quot;wrapped&quot;</span><span class="s0">)</span><span class="s1">;</span>
+        <span class="s0">}</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">toggleLineWrapping() {</span>
+        <span class="s1">var </span><span class="s0">checkBox = getCheckBox()</span><span class="s1">;</span>
+
+        <span class="s1">if </span><span class="s0">(checkBox.checked) {</span>
+            <span class="s0">forAllCodeBlocks(addClass)</span><span class="s1">;</span>
+        <span class="s0">} </span><span class="s1">else </span><span class="s0">{</span>
+            <span class="s0">forAllCodeBlocks(removeClass)</span><span class="s1">;</span>
+        <span class="s0">}</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">initControls() {</span>
+        <span class="s1">if </span><span class="s0">(findCodeBlocks().length &gt; </span><span class="s3">0</span><span class="s0">) {</span>
+            <span class="s1">var </span><span class="s0">checkBox = getCheckBox()</span><span class="s1">;</span>
+            <span class="s1">var </span><span class="s0">label = getLabelForCheckBox()</span><span class="s1">;</span>
+
+            <span class="s0">checkBox.onclick = toggleLineWrapping</span><span class="s1">;</span>
+            <span class="s0">checkBox.checked = </span><span class="s1">false;</span>
+
+            <span class="s0">removeClass(label</span><span class="s1">, </span><span class="s2">&quot;hidden&quot;</span><span class="s0">)</span><span class="s1">;</span>
+         <span class="s0">}</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">switchTab() {</span>
+        <span class="s1">var </span><span class="s0">id = </span><span class="s1">this</span><span class="s0">.id.substr(</span><span class="s3">1</span><span class="s0">)</span><span class="s1">;</span>
+
+        <span class="s1">for </span><span class="s0">(</span><span class="s1">var </span><span class="s0">i = </span><span class="s3">0</span><span class="s1">; </span><span class="s0">i &lt; tabs.tabs.length</span><span class="s1">; </span><span class="s0">i++) {</span>
+            <span class="s1">if </span><span class="s0">(tabs.tabs[i].id === id) {</span>
+                <span class="s0">tabs.select(i)</span><span class="s1">;</span>
+                <span class="s1">break;</span>
+            <span class="s0">}</span>
+        <span class="s0">}</span>
+
+        <span class="s1">return false;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">select(i) {</span>
+        <span class="s1">this</span><span class="s0">.deselectAll()</span><span class="s1">;</span>
+
+        <span class="s0">changeElementClass(</span><span class="s1">this</span><span class="s0">.tabs[i]</span><span class="s1">, </span><span class="s2">&quot;tab selected&quot;</span><span class="s0">)</span><span class="s1">;</span>
+        <span class="s0">changeElementClass(</span><span class="s1">this</span><span class="s0">.headers[i]</span><span class="s1">, </span><span class="s2">&quot;selected&quot;</span><span class="s0">)</span><span class="s1">;</span>
+
+        <span class="s1">while </span><span class="s0">(</span><span class="s1">this</span><span class="s0">.headers[i].firstChild) {</span>
+            <span class="s1">this</span><span class="s0">.headers[i].removeChild(</span><span class="s1">this</span><span class="s0">.headers[i].firstChild)</span><span class="s1">;</span>
+        <span class="s0">}</span>
+
+        <span class="s1">var </span><span class="s0">h2 = document.createElement(</span><span class="s2">&quot;H2&quot;</span><span class="s0">)</span><span class="s1">;</span>
+
+        <span class="s0">h2.appendChild(document.createTextNode(</span><span class="s1">this</span><span class="s0">.titles[i]))</span><span class="s1">;</span>
+        <span class="s1">this</span><span class="s0">.headers[i].appendChild(h2)</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">deselectAll() {</span>
+        <span class="s1">for </span><span class="s0">(</span><span class="s1">var </span><span class="s0">i = </span><span class="s3">0</span><span class="s1">; </span><span class="s0">i &lt; </span><span class="s1">this</span><span class="s0">.tabs.length</span><span class="s1">; </span><span class="s0">i++) {</span>
+            <span class="s0">changeElementClass(</span><span class="s1">this</span><span class="s0">.tabs[i]</span><span class="s1">, </span><span class="s2">&quot;tab deselected&quot;</span><span class="s0">)</span><span class="s1">;</span>
+            <span class="s0">changeElementClass(</span><span class="s1">this</span><span class="s0">.headers[i]</span><span class="s1">, </span><span class="s2">&quot;deselected&quot;</span><span class="s0">)</span><span class="s1">;</span>
+
+            <span class="s1">while </span><span class="s0">(</span><span class="s1">this</span><span class="s0">.headers[i].firstChild) {</span>
+                <span class="s1">this</span><span class="s0">.headers[i].removeChild(</span><span class="s1">this</span><span class="s0">.headers[i].firstChild)</span><span class="s1">;</span>
+            <span class="s0">}</span>
+
+            <span class="s1">var </span><span class="s0">a = document.createElement(</span><span class="s2">&quot;A&quot;</span><span class="s0">)</span><span class="s1">;</span>
+
+            <span class="s0">a.setAttribute(</span><span class="s2">&quot;id&quot;</span><span class="s1">, </span><span class="s2">&quot;ltab&quot; </span><span class="s0">+ i)</span><span class="s1">;</span>
+            <span class="s0">a.setAttribute(</span><span class="s2">&quot;href&quot;</span><span class="s1">, </span><span class="s2">&quot;#tab&quot; </span><span class="s0">+ i)</span><span class="s1">;</span>
+            <span class="s0">a.onclick = switchTab</span><span class="s1">;</span>
+            <span class="s0">a.appendChild(document.createTextNode(</span><span class="s1">this</span><span class="s0">.titles[i]))</span><span class="s1">;</span>
+
+            <span class="s1">this</span><span class="s0">.headers[i].appendChild(a)</span><span class="s1">;</span>
+        <span class="s0">}</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">findTabs(container) {</span>
+        <span class="s1">return </span><span class="s0">findChildElements(container</span><span class="s1">, </span><span class="s2">&quot;DIV&quot;</span><span class="s1">, </span><span class="s2">&quot;tab&quot;</span><span class="s0">)</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">findHeaders(container) {</span>
+        <span class="s1">var </span><span class="s0">owner = findChildElements(container</span><span class="s1">, </span><span class="s2">&quot;UL&quot;</span><span class="s1">, </span><span class="s2">&quot;tabLinks&quot;</span><span class="s0">)</span><span class="s1">;</span>
+        <span class="s1">return </span><span class="s0">findChildElements(owner[</span><span class="s3">0</span><span class="s0">]</span><span class="s1">, </span><span class="s2">&quot;LI&quot;</span><span class="s1">, null</span><span class="s0">)</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">findTitles(tabs) {</span>
+        <span class="s1">var </span><span class="s0">titles = []</span><span class="s1">;</span>
+
+        <span class="s1">for </span><span class="s0">(</span><span class="s1">var </span><span class="s0">i = </span><span class="s3">0</span><span class="s1">; </span><span class="s0">i &lt; tabs.length</span><span class="s1">; </span><span class="s0">i++) {</span>
+            <span class="s1">var </span><span class="s0">tab = tabs[i]</span><span class="s1">;</span>
+            <span class="s1">var </span><span class="s0">header = findChildElements(tab</span><span class="s1">, </span><span class="s2">&quot;H2&quot;</span><span class="s1">, null</span><span class="s0">)[</span><span class="s3">0</span><span class="s0">]</span><span class="s1">;</span>
+
+            <span class="s0">header.parentNode.removeChild(header)</span><span class="s1">;</span>
+
+            <span class="s1">if </span><span class="s0">(header.innerText) {</span>
+                <span class="s0">titles.push(header.innerText)</span><span class="s1">;</span>
+            <span class="s0">} </span><span class="s1">else </span><span class="s0">{</span>
+                <span class="s0">titles.push(header.textContent)</span><span class="s1">;</span>
+            <span class="s0">}</span>
+        <span class="s0">}</span>
+
+        <span class="s1">return </span><span class="s0">titles</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">function </span><span class="s0">findChildElements(container</span><span class="s1">, </span><span class="s0">name</span><span class="s1">, </span><span class="s0">targetClass) {</span>
+        <span class="s1">var </span><span class="s0">elements = []</span><span class="s1">;</span>
+        <span class="s1">var </span><span class="s0">children = container.childNodes</span><span class="s1">;</span>
+
+        <span class="s1">for </span><span class="s0">(</span><span class="s1">var </span><span class="s0">i = </span><span class="s3">0</span><span class="s1">; </span><span class="s0">i &lt; children.length</span><span class="s1">; </span><span class="s0">i++) {</span>
+            <span class="s1">var </span><span class="s0">child = children.item(i)</span><span class="s1">;</span>
+
+            <span class="s1">if </span><span class="s0">(child.nodeType === </span><span class="s3">1 </span><span class="s0">&amp;&amp; child.nodeName === name) {</span>
+                <span class="s1">if </span><span class="s0">(targetClass &amp;&amp; child.className.indexOf(targetClass) &lt; </span><span class="s3">0</span><span class="s0">) {</span>
+                    <span class="s1">continue;</span>
+                <span class="s0">}</span>
+
+                <span class="s0">elements.push(child)</span><span class="s1">;</span>
+            <span class="s0">}</span>
+        <span class="s0">}</span>
+
+        <span class="s1">return </span><span class="s0">elements</span><span class="s1">;</span>
+    <span class="s0">}</span>
+
+    <span class="s4">// Entry point.</span>
+
+    <span class="s0">window.onload = </span><span class="s1">function</span><span class="s0">() {</span>
+        <span class="s0">initTabs()</span><span class="s1">;</span>
+        <span class="s0">initControls()</span><span class="s1">;</span>
+    <span class="s0">}</span><span class="s1">;</span>
+<span class="s0">} (window</span><span class="s1">, </span><span class="s0">window.document))</span><span class="s1">;</span></pre>
+</body>
+</html>

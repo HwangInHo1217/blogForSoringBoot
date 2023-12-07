@@ -1,0 +1,183 @@
+<html>
+<head>
+<title>board.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+board.js</font>
+</center></td></tr></table>
+<pre><span class="s0">let </span><span class="s1">boardIndex = {</span>
+    <span class="s1">init:</span><span class="s0">function </span><span class="s1">(){</span>
+        <span class="s1">$(</span><span class="s2">&quot;#btn-board-save&quot;</span><span class="s1">).on(</span><span class="s2">&quot;click&quot;</span><span class="s0">, </span><span class="s1">()=&gt;{</span>
+            <span class="s0">this</span><span class="s1">.save()</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">$(</span><span class="s2">&quot;#btn-delete&quot;</span><span class="s1">).on(</span><span class="s2">&quot;click&quot;</span><span class="s0">, </span><span class="s1">()=&gt;{</span>
+            <span class="s0">this</span><span class="s1">.deleteById()</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">$(</span><span class="s2">&quot;#btn-update&quot;</span><span class="s1">).on(</span><span class="s2">&quot;click&quot;</span><span class="s0">, </span><span class="s1">()=&gt;{</span>
+            <span class="s0">this</span><span class="s1">.update()</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">$(</span><span class="s2">&quot;#btn-reply-save&quot;</span><span class="s1">).on(</span><span class="s2">&quot;click&quot;</span><span class="s0">, </span><span class="s1">()=&gt;{ !!</span>
+            <span class="s0">this</span><span class="s1">.replySave()</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">$(</span><span class="s2">&quot;#btn-search&quot;</span><span class="s1">).on(</span><span class="s2">&quot;click&quot;</span><span class="s0">, </span><span class="s1">()=&gt;{ !</span>
+            <span class="s0">this</span><span class="s1">.searchBoard()</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+    <span class="s1">}</span><span class="s0">,</span>
+    <span class="s1">save:</span><span class="s0">function </span><span class="s1">() {</span>
+
+        <span class="s0">let </span><span class="s1">data = {</span>
+            <span class="s1">title: $(</span><span class="s2">&quot;#title&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">content: $(</span><span class="s2">&quot;#content&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">categoryId: $(</span><span class="s2">&quot;#category&quot;</span><span class="s1">).val()</span>
+        <span class="s1">}</span><span class="s0">;</span>
+        <span class="s1">console.log(data)</span><span class="s0">;</span>
+        <span class="s1">$.ajax({</span>
+            <span class="s1">type:</span><span class="s2">&quot;POST&quot;</span><span class="s0">,</span>
+            <span class="s1">url:</span><span class="s2">&quot;/api/board&quot;</span><span class="s0">,</span>
+            <span class="s1">data:JSON.stringify(data)</span><span class="s0">,</span>
+            <span class="s1">contentType:</span><span class="s2">&quot;application/json; charset=utf-8&quot;</span><span class="s0">,</span><span class="s3">//bodt데이터가 어떤 타입인지(MIME)</span>
+            <span class="s1">dataType:</span><span class="s2">&quot;json&quot;</span><span class="s3">//요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 버퍼로 오기 때문에 문자열로 옴( 생긴게 json이라면) =&gt; javasciript 오브젝트로 변경해줌</span>
+        <span class="s1">}).done(</span><span class="s0">function</span><span class="s1">(resp){</span>
+            <span class="s1">alert(</span><span class="s2">&quot;글쓰기 완료&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s3">//alert(resp);</span>
+            <span class="s1">location.href=</span><span class="s2">&quot;/&quot;</span><span class="s0">;</span>
+        <span class="s1">}).fail(</span><span class="s0">function</span><span class="s1">(error){</span>
+            <span class="s1">alert(JSON.stringify(error))</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span><span class="s3">//ajax 통신을 이용해서 3개의 데이터를 json으로 변경하여 insert 요청!</span>
+    <span class="s1">}</span><span class="s0">,</span>
+    <span class="s1">deleteById:</span><span class="s0">function </span><span class="s1">() {</span>
+        <span class="s0">let </span><span class="s1">id = $(</span><span class="s2">&quot;#id&quot;</span><span class="s1">).text()</span><span class="s0">;</span>
+        <span class="s1">$.ajax({</span>
+            <span class="s1">type:</span><span class="s2">&quot;DELETE&quot;</span><span class="s0">,</span>
+            <span class="s1">url:</span><span class="s2">&quot;/api/board/&quot;</span><span class="s1">+id</span><span class="s0">,</span>
+            <span class="s1">dataType:</span><span class="s2">&quot;json&quot;</span><span class="s3">//요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 버퍼로 오기 때문에 문자열로 옴( 생긴게 json이라면) =&gt; javasciript 오브젝트로 변경해줌</span>
+        <span class="s1">}).done(</span><span class="s0">function</span><span class="s1">(resp){</span>
+            <span class="s1">alert(</span><span class="s2">&quot;삭제 완료&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">location.href=</span><span class="s2">&quot;/&quot;</span><span class="s0">;</span>
+        <span class="s1">}).fail(</span><span class="s0">function</span><span class="s1">(error){</span>
+            <span class="s1">alert(JSON.stringify(error))</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span><span class="s3">//ajax 통신을 이용해서 3개의 데이터를 json으로 변경하여 insert 요청!</span>
+    <span class="s1">}</span><span class="s0">,</span>
+    <span class="s1">update:</span><span class="s0">function </span><span class="s1">() {</span>
+        <span class="s0">let </span><span class="s1">id=$(</span><span class="s2">&quot;#id&quot;</span><span class="s1">).val()</span><span class="s0">;</span>
+
+        <span class="s0">let </span><span class="s1">data = {</span>
+            <span class="s1">title: $(</span><span class="s2">&quot;#title&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">content: $(</span><span class="s2">&quot;#content&quot;</span><span class="s1">).val()</span>
+        <span class="s1">}</span><span class="s0">;</span>
+        <span class="s1">console.log(id)</span><span class="s0">;</span>
+        <span class="s1">console.log(data)</span><span class="s0">;</span>
+        <span class="s1">$.ajax({</span>
+            <span class="s1">type:</span><span class="s2">&quot;PUT&quot;</span><span class="s0">,</span>
+            <span class="s1">url:</span><span class="s2">&quot;/api/board/&quot;</span><span class="s1">+id</span><span class="s0">,</span>
+            <span class="s1">data:JSON.stringify(data)</span><span class="s0">,</span>
+            <span class="s1">contentType:</span><span class="s2">&quot;application/json; charset=utf-8&quot;</span><span class="s0">,</span><span class="s3">//bodt데이터가 어떤 타입인지(MIME)</span>
+            <span class="s1">dataType:</span><span class="s2">&quot;json&quot;</span><span class="s3">//요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 버퍼로 오기 때문에 문자열로 옴( 생긴게 json이라면) =&gt; javasciript 오브젝트로 변경해줌</span>
+        <span class="s1">}).done(</span><span class="s0">function</span><span class="s1">(resp){</span>
+            <span class="s1">alert(</span><span class="s2">&quot;글수정 완료&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">location.href=</span><span class="s2">&quot;/&quot;</span><span class="s0">;</span>
+        <span class="s1">}).fail(</span><span class="s0">function</span><span class="s1">(error){</span>
+            <span class="s1">alert(JSON.stringify(error))</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span><span class="s3">//ajax 통신을 이용해서 3개의 데이터를 json으로 변경하여 insert 요청!</span>
+    <span class="s1">}</span><span class="s0">,</span>
+    <span class="s1">replySave:</span><span class="s0">function </span><span class="s1">() {</span>
+        <span class="s3">//alert(&quot;버튼 클릭&quot;);</span>
+        <span class="s0">let </span><span class="s1">data = {</span>
+            <span class="s1">userId:$(</span><span class="s2">&quot;#userId&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">boardId:$(</span><span class="s2">&quot;#boardId&quot;</span><span class="s1">).val()</span><span class="s0">,</span>
+            <span class="s1">content: $(</span><span class="s2">&quot;#reply-content&quot;</span><span class="s1">).val()</span>
+        <span class="s1">}</span><span class="s0">;</span>
+        <span class="s0">let </span><span class="s1">boardId = $(</span><span class="s2">&quot;#boardId&quot;</span><span class="s1">).val()</span><span class="s0">;</span>
+       <span class="s1">$.ajax({</span>
+
+            <span class="s1">type:</span><span class="s2">&quot;POST&quot;</span><span class="s0">,</span>
+            <span class="s1">url:</span><span class="s2">`/api/board/</span><span class="s1">${data.boardId}</span><span class="s2">/reply`</span><span class="s0">,</span>
+            <span class="s1">data:JSON.stringify(data)</span><span class="s0">,</span>
+            <span class="s1">contentType:</span><span class="s2">&quot;application/json; charset=utf-8&quot;</span><span class="s0">,</span><span class="s3">//bodt데이터가 어떤 타입인지(MIME)</span>
+            <span class="s1">dataType:</span><span class="s2">&quot;json&quot;</span><span class="s3">//요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 버퍼로 오기 때문에 문자열로 옴( 생긴게 json이라면) =&gt; javasciript 오브젝트로 변경해줌</span>
+        <span class="s1">}).done(</span><span class="s0">function</span><span class="s1">(resp){</span>
+            <span class="s1">alert(</span><span class="s2">&quot;댓글 작성 완료&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s3">//alert(resp);</span>
+            <span class="s1">location.href=</span><span class="s2">`/board/</span><span class="s1">${data.boardId}</span><span class="s2">`</span><span class="s0">;</span>
+        <span class="s1">}).fail(</span><span class="s0">function</span><span class="s1">(error){</span>
+            <span class="s1">alert(JSON.stringify(error))</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span><span class="s3">//ajax 통신을 이용해서 3개의 데이터를 json으로 변경하여 insert 요청!</span>
+    <span class="s1">}</span><span class="s0">,</span>
+    <span class="s1">replyDelete : </span><span class="s0">function</span><span class="s1">(boardId</span><span class="s0">, </span><span class="s1">replyId){</span>
+        <span class="s1">$.ajax({</span>
+            <span class="s1">type: </span><span class="s2">&quot;DELETE&quot;</span><span class="s0">,</span>
+            <span class="s1">url: </span><span class="s2">`/api/board/</span><span class="s1">${boardId}</span><span class="s2">/reply/</span><span class="s1">${replyId}</span><span class="s2">`</span><span class="s0">,</span>
+            <span class="s1">dataType: </span><span class="s2">&quot;json&quot;</span>
+        <span class="s1">}).done(</span><span class="s0">function</span><span class="s1">(resp){</span>
+            <span class="s1">alert(</span><span class="s2">&quot;댓글삭제 완료&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">location.href = </span><span class="s2">`/board/</span><span class="s1">${boardId}</span><span class="s2">`</span><span class="s0">;</span>
+        <span class="s1">}).fail(</span><span class="s0">function</span><span class="s1">(error){</span>
+            <span class="s1">alert(JSON.stringify(error))</span><span class="s0">;</span>
+        <span class="s1">})</span><span class="s0">;</span>
+    <span class="s1">}</span><span class="s0">,</span>
+<span class="s3">/*    searchBoard : function (){ 
+        let data={ 
+            title :$(&quot;#title&quot;).val(), 
+            contente : $(&quot;#content&quot;).val() 
+        }; 
+ 
+        $.ajax({ 
+            type : &quot;GET&quot;, 
+            url:&quot;/api&quot; 
+        }) 
+ 
+    }*/</span>
+
+<span class="s1">}</span>
+<span class="s1">$(document).ready(</span><span class="s0">function</span><span class="s1">() {</span>
+    <span class="s1">$(</span><span class="s2">'.dropdown-item'</span><span class="s1">).on(</span><span class="s2">'click'</span><span class="s0">, function</span><span class="s1">(e) {</span>
+        <span class="s1">e.preventDefault()</span><span class="s0">; </span><span class="s3">// 기본 이벤트 방지</span>
+        <span class="s0">var </span><span class="s1">selectedFilter = $(</span><span class="s0">this</span><span class="s1">).data(</span><span class="s2">'filter'</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">var </span><span class="s1">selectedText = $(</span><span class="s0">this</span><span class="s1">).text()</span><span class="s0">;</span>
+        <span class="s1">$(</span><span class="s2">'#filterType'</span><span class="s1">).val(selectedFilter)</span><span class="s0">;</span>
+        <span class="s3">// 드롭다운 버튼 텍스트 변경</span>
+        <span class="s1">$(</span><span class="s2">'.dropdown-toggle'</span><span class="s1">).text(selectedText)</span><span class="s0">;</span>
+    <span class="s1">})</span><span class="s0">;</span>
+<span class="s1">})</span><span class="s0">;</span>
+<span class="s0">function </span><span class="s1">toggleLike(boardId) {</span>
+    <span class="s0">let </span><span class="s1">likeIcon = $(</span><span class="s2">`#storyLikeIcon-</span><span class="s1">${boardId}</span><span class="s2">`</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s0">let </span><span class="s1">isLiked = likeIcon.hasClass(</span><span class="s2">&quot;active&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+    <span class="s0">let </span><span class="s1">ajaxType = isLiked ? </span><span class="s2">&quot;delete&quot; </span><span class="s1">: </span><span class="s2">&quot;post&quot;</span><span class="s0">;</span>
+
+    <span class="s1">$.ajax({</span>
+        <span class="s1">type: ajaxType</span><span class="s0">,</span>
+        <span class="s1">url: </span><span class="s2">`/api/board/</span><span class="s1">${boardId}</span><span class="s2">/likes`</span><span class="s0">,</span>
+        <span class="s1">dataType: </span><span class="s2">&quot;json&quot;</span>
+    <span class="s1">}).done(res =&gt; {</span>
+        <span class="s3">// 좋아요 수를 가져오고, 상태에 따라 증가 또는 감소시킵니다.</span>
+        <span class="s0">let </span><span class="s1">likeCountStr = $(</span><span class="s2">`#storyLikeCount-</span><span class="s1">${boardId}</span><span class="s2">`</span><span class="s1">).text().match(</span><span class="s4">/\d+/</span><span class="s1">)[</span><span class="s4">0</span><span class="s1">]</span><span class="s0">; </span><span class="s3">// 정규표현식 사용</span>
+        <span class="s0">let </span><span class="s1">likeCount = Number(likeCountStr) + (isLiked ? -</span><span class="s4">1 </span><span class="s1">: </span><span class="s4">1</span><span class="s1">)</span><span class="s0">; </span><span class="s3">// 좋아요 상태에 따라 좋아요 수 변경</span>
+        <span class="s1">$(</span><span class="s2">`#storyLikeCount-</span><span class="s1">${boardId}</span><span class="s2">`</span><span class="s1">).text(likeCount + </span><span class="s2">&quot; likes&quot;</span><span class="s1">)</span><span class="s0">; </span><span class="s3">// 좋아요 수 업데이트</span>
+
+        <span class="s3">// 아이콘 상태를 업데이트합니다.</span>
+        <span class="s1">likeIcon.toggleClass(</span><span class="s2">&quot;fas far active&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}).fail(error =&gt; {</span>
+        <span class="s1">console.log(</span><span class="s2">&quot;오류&quot;</span><span class="s0">, </span><span class="s1">error)</span><span class="s0">;</span>
+    <span class="s1">})</span><span class="s0">;</span>
+<span class="s1">}</span>
+<span class="s1">boardIndex.init()</span><span class="s0">;</span>
+
+<span class="s3">/* 
+* 회원가입시 AJAX를 사용하는 2가지 이유 
+* 요청에 대한 응답을 HTNL이 아닌 DATA(JSON)으로 받기 위해-&gt;서버를 2개가 아닌 1개만 사용 가능 
+* 비동기 통신을 하기 위해 -&gt; 비절차적 
+* */</span></pre>
+</body>
+</html>

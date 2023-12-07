@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>SubscribeService.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6a8759;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SubscribeService.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.service</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.handler.CustomException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.dto.SubscribeDto</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.SubscribeRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.RequiredArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.qlrm.mapper.JpaResultMapper</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.stereotype.Service</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.transaction.annotation.Transactional</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javax.persistence.EntityManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">javax.persistence.Query</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+
+<span class="s1">@RequiredArgsConstructor</span>
+<span class="s1">@Service</span>
+<span class="s0">public class </span><span class="s1">SubscribeService {</span>
+
+	<span class="s0">private final </span><span class="s1">SubscribeRepository subscribeRepository</span><span class="s0">;</span>
+	<span class="s0">private final </span><span class="s1">EntityManager em</span><span class="s0">; </span><span class="s2">// Repository는 EntityManager를 구현해서 만들어져 있는 구현체</span>
+	
+	<span class="s1">@Transactional(readOnly = </span><span class="s0">true</span><span class="s1">)</span>
+	<span class="s0">public </span><span class="s1">List&lt;SubscribeDto&gt; 구독리스트(</span><span class="s0">int </span><span class="s1">principalId</span><span class="s0">, int </span><span class="s1">pageUserId){</span>
+		
+		<span class="s2">// 쿼리 준비</span>
+		<span class="s1">StringBuffer sb = </span><span class="s0">new </span><span class="s1">StringBuffer()</span><span class="s0">;</span>
+		<span class="s1">sb.append(</span><span class="s3">&quot;SELECT u.id, u.username, &quot;</span><span class="s1">)</span><span class="s0">;</span>
+		<span class="s1">sb.append(</span><span class="s3">&quot;(CASE WHEN EXISTS (SELECT 1 FROM subscribe WHERE fromUserId = ? AND toUserId = u.id) THEN 1 ELSE 0 END) AS subscribeState, &quot;</span><span class="s1">)</span><span class="s0">;</span>
+		<span class="s1">sb.append(</span><span class="s3">&quot;(CASE WHEN ? = u.id THEN 1 ELSE 0 END) AS equalUserState, &quot;</span><span class="s1">)</span><span class="s0">;</span>
+		<span class="s1">sb.append(</span><span class="s3">&quot;u.profileImageUrl &quot;</span><span class="s1">)</span><span class="s0">; </span><span class="s2">// profileImageUrl을 선택하는 코드를 추가합니다.</span>
+		<span class="s1">sb.append(</span><span class="s3">&quot;FROM user u INNER JOIN subscribe s ON u.id = s.toUserId &quot;</span><span class="s1">)</span><span class="s0">;</span>
+		<span class="s1">sb.append(</span><span class="s3">&quot;WHERE s.fromUserId = ?&quot;</span><span class="s1">)</span><span class="s0">;</span>
+<span class="s2">/* 
+        */</span>
+		<span class="s2">// 1.물음표 principalId</span>
+		<span class="s2">// 2.물음표 principalId</span>
+		<span class="s2">// 3.물음표 pageUserId</span>
+		
+		<span class="s2">// 쿼리 완성</span>
+		<span class="s1">Query query = em.createNativeQuery(sb.toString())</span>
+				<span class="s1">.setParameter(</span><span class="s4">1</span><span class="s0">, </span><span class="s1">principalId)</span>
+				<span class="s1">.setParameter(</span><span class="s4">2</span><span class="s0">, </span><span class="s1">principalId)</span>
+				<span class="s1">.setParameter(</span><span class="s4">3</span><span class="s0">, </span><span class="s1">pageUserId)</span><span class="s0">;</span>
+		
+		<span class="s2">// 쿼리 실행 (qlrm 라이브러리 필요 = DTO에 DB결과를 매핑하기 위해서)</span>
+		<span class="s1">JpaResultMapper result = </span><span class="s0">new </span><span class="s1">JpaResultMapper()</span><span class="s0">;</span>
+		<span class="s1">List&lt;SubscribeDto&gt; subscribeDtos =  result.list(query</span><span class="s0">, </span><span class="s1">SubscribeDto.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+		
+		<span class="s0">return </span><span class="s1">subscribeDtos</span><span class="s0">;</span>
+	<span class="s1">}</span>
+	
+	
+	<span class="s1">@Transactional</span>
+	<span class="s0">public void </span><span class="s1">구독하기(</span><span class="s0">int </span><span class="s1">fromUserId</span><span class="s0">, int </span><span class="s1">toUserId) {</span>
+		<span class="s0">try </span><span class="s1">{</span>
+			<span class="s1">subscribeRepository.mSubscribe(fromUserId</span><span class="s0">, </span><span class="s1">toUserId)</span><span class="s0">;</span>
+		<span class="s1">} </span><span class="s0">catch </span><span class="s1">(Exception e) {</span>
+			<span class="s0">throw new </span><span class="s1">CustomException(</span><span class="s3">&quot;이미 구독을 하였습니다.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+		<span class="s1">}</span>
+	<span class="s1">}</span>
+	
+	<span class="s1">@Transactional</span>
+	<span class="s0">public void </span><span class="s1">구독취소하기(</span><span class="s0">int </span><span class="s1">fromUserId</span><span class="s0">, int </span><span class="s1">toUserId) {</span>
+		<span class="s1">subscribeRepository.mUnSubscribe(fromUserId</span><span class="s0">, </span><span class="s1">toUserId)</span><span class="s0">;</span>
+	<span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

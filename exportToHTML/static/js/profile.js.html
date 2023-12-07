@@ -1,0 +1,199 @@
+<html>
+<head>
+<title>profile.js</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #629755; font-style: italic;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #cc7832;}
+.s4 { color: #6a8759;}
+.s5 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+profile.js</font>
+</center></td></tr></table>
+<pre><span class="s0">/**</span>
+  <span class="s0">1. 유저 프로파일 페이지</span>
+  <span class="s0">(1) 유저 프로파일 페이지 구독하기, 구독취소</span>
+  <span class="s0">(2) 구독자 정보 모달 보기</span>
+  <span class="s0">(3) 구독자 정보 모달에서 구독하기, 구독취소</span>
+  <span class="s0">(4) 유저 프로필 사진 변경</span>
+  <span class="s0">(5) 사용자 정보 메뉴 열기 닫기</span>
+  <span class="s0">(6) 사용자 정보(회원정보, 로그아웃, 닫기) 모달</span>
+  <span class="s0">(7) 사용자 프로파일 이미지 메뉴(사진업로드, 취소) 모달 </span>
+  <span class="s0">(8) 구독자 정보 모달 닫기</span>
+ <span class="s0">*/</span>
+
+<span class="s2">// (1) 유저 프로파일 페이지 구독하기, 구독취소</span>
+<span class="s3">function </span><span class="s1">toggleSubscribe(toUserId</span><span class="s3">, </span><span class="s1">obj) {</span>
+	<span class="s3">if </span><span class="s1">($(obj).text() === </span><span class="s4">&quot;구독취소&quot;</span><span class="s1">) {</span>
+		<span class="s1">$.ajax({</span>
+			<span class="s1">type: </span><span class="s4">&quot;delete&quot;</span><span class="s3">,</span>
+			<span class="s1">url: </span><span class="s4">&quot;/api/subscribe/&quot; </span><span class="s1">+ toUserId</span><span class="s3">,</span>
+			<span class="s1">dataType: </span><span class="s4">&quot;json&quot;</span>
+		<span class="s1">}).done(res =&gt; {</span>
+			<span class="s1">$(obj).text(</span><span class="s4">&quot;구독하기&quot;</span><span class="s1">)</span><span class="s3">;</span>
+			<span class="s1">$(obj).toggleClass(</span><span class="s4">&quot;blue&quot;</span><span class="s1">)</span><span class="s3">;</span>
+		<span class="s1">}).fail(error =&gt; {</span>
+			<span class="s1">console.log(</span><span class="s4">&quot;구독취소실패&quot;</span><span class="s3">, </span><span class="s1">error)</span><span class="s3">;</span>
+		<span class="s1">})</span><span class="s3">;</span>
+	<span class="s1">} </span><span class="s3">else </span><span class="s1">{</span>
+		<span class="s1">$.ajax({</span>
+			<span class="s1">type: </span><span class="s4">&quot;post&quot;</span><span class="s3">,</span>
+			<span class="s1">url: </span><span class="s4">&quot;/api/subscribe/&quot; </span><span class="s1">+ toUserId</span><span class="s3">,</span>
+			<span class="s1">dataType: </span><span class="s4">&quot;json&quot;</span>
+		<span class="s1">}).done(res =&gt; {</span>
+			<span class="s1">$(obj).text(</span><span class="s4">&quot;구독취소&quot;</span><span class="s1">)</span><span class="s3">;</span>
+			<span class="s1">$(obj).toggleClass(</span><span class="s4">&quot;blue&quot;</span><span class="s1">)</span><span class="s3">;</span>
+		<span class="s1">}).fail(error =&gt; {</span>
+			<span class="s1">console.log(</span><span class="s4">&quot;구독하기실패&quot;</span><span class="s3">, </span><span class="s1">error)</span><span class="s3">;</span>
+		<span class="s1">})</span><span class="s3">;</span>
+	<span class="s1">}</span>
+<span class="s1">}</span>
+
+<span class="s2">// (2) 구독자 정보  모달 보기</span>
+<span class="s3">function </span><span class="s1">subscribeInfoModalOpen(pageUserId) {</span>
+	<span class="s1">$(</span><span class="s4">&quot;.modal-fade&quot;</span><span class="s1">).css(</span><span class="s4">&quot;display&quot;</span><span class="s3">, </span><span class="s4">&quot;flex&quot;</span><span class="s1">)</span><span class="s3">;</span>
+	<span class="s1">$(</span><span class="s4">&quot;#subscribeModalList&quot;</span><span class="s1">).empty()</span><span class="s3">; </span><span class="s2">// 기존 목록을 비웁니다.</span>
+
+	<span class="s1">$.ajax({</span>
+		<span class="s1">url: </span><span class="s4">`/api/user/</span><span class="s1">${pageUserId}</span><span class="s4">/subscribe`</span><span class="s3">,</span>
+		<span class="s1">dataType: </span><span class="s4">&quot;json&quot;</span>
+	<span class="s1">}).done(res =&gt; {</span>
+		<span class="s1">console.log(res.data)</span><span class="s3">;</span>
+		<span class="s1">console.log(Array.isArray(res.data))</span><span class="s3">;</span>
+		<span class="s1">res.data.forEach((u)=&gt;{</span>
+			<span class="s3">let </span><span class="s1">item = getSubscribeModalItem(u)</span><span class="s3">;</span>
+			<span class="s1">$(</span><span class="s4">&quot;#subscribeModalList&quot;</span><span class="s1">).append(item)</span><span class="s3">;</span>
+		<span class="s1">})</span><span class="s3">;</span>
+	<span class="s1">}).fail(error =&gt; {</span>
+		<span class="s1">console.log(</span><span class="s4">&quot;구독정보 불러오기 오류&quot;</span><span class="s3">, </span><span class="s1">error)</span><span class="s3">;</span>
+	<span class="s1">})</span><span class="s3">;</span>
+<span class="s1">}</span>
+
+<span class="s3">function </span><span class="s1">getSubscribeModalItem(u) {</span>
+	
+	<span class="s3">let </span><span class="s1">item = </span><span class="s4">`&lt;div id=&quot;subscribeModalItem-</span><span class="s1">${u.id}</span><span class="s4">&quot;&gt; 
+ 
+    &lt;div&gt; 
+        &lt;h5&gt;&lt;a href=&quot;/user/</span><span class="s1">${u.id}</span><span class="s4">&quot;&gt;</span><span class="s1">${u.username}</span><span class="s4">&lt;/a&gt;&lt;/h5&gt; 
+        &lt;img src=&quot;/upload/</span><span class="s1">${u.profileimageurl}</span><span class="s4">&quot; style=&quot;width: 100px; height: 100px; border-radius: 50%;&quot;/&gt; 
+    &lt;/div&gt; 
+    &lt;div class=&quot;subscribe__btn&quot;&gt;`</span><span class="s3">;</span>
+	
+	<span class="s3">if</span><span class="s1">(!u.equalUserState){ </span><span class="s2">// 동일 유저가 아닐 때 버튼이 만들이 만들어져야함</span>
+		<span class="s3">if</span><span class="s1">(u.subscribeState){ </span><span class="s2">// 구독한 상태</span>
+			<span class="s1">item += </span><span class="s4">`&lt;button class=&quot;btn btn-primary&quot; onclick=&quot;toggleSubscribe(</span><span class="s1">${u.id}</span><span class="s4">, this)&quot;&gt;구독취소&lt;/button&gt;`</span><span class="s3">;</span>
+		<span class="s1">}</span><span class="s3">else</span><span class="s1">{ </span><span class="s2">// 구독안한 상태</span>
+			<span class="s1">item += </span><span class="s4">`&lt;button class=&quot;btn btn-primary&quot; onclick=&quot;toggleSubscribe(</span><span class="s1">${u.id}</span><span class="s4">, this)&quot;&gt;구독하기&lt;/button&gt;`</span><span class="s3">;</span>
+		<span class="s1">}</span>
+	<span class="s1">}</span>
+	<span class="s1">item += </span><span class="s4">`	</span>
+	<span class="s4">&lt;/div&gt; 
+&lt;/div&gt;`</span><span class="s3">;</span>
+
+	<span class="s1">console.log(item)</span><span class="s3">;</span>
+	<span class="s3">return </span><span class="s1">item</span><span class="s3">;</span>
+<span class="s1">}</span>
+
+<span class="s2">// (3) 유저 프로파일 사진 변경</span>
+<span class="s3">function </span><span class="s1">profileImageUpload(pageUserId</span><span class="s3">, </span><span class="s1">principalId) {</span>
+	
+	<span class="s1">console.log(</span><span class="s4">&quot;pageUserId&quot;</span><span class="s3">, </span><span class="s1">pageUserId)</span><span class="s3">;</span>
+	<span class="s1">console.log(</span><span class="s4">&quot;principalId&quot;</span><span class="s3">, </span><span class="s1">principalId)</span><span class="s3">;</span>
+	
+	<span class="s3">if</span><span class="s1">(pageUserId != principalId){</span>
+		<span class="s1">alert(</span><span class="s4">&quot;프로필 사진을 수정할 수 없는 유저입니다.&quot;</span><span class="s1">)</span><span class="s3">;</span>
+		<span class="s3">return;</span>
+	<span class="s1">}</span>
+	
+	<span class="s1">$(</span><span class="s4">&quot;#userProfileImageInput&quot;</span><span class="s1">).click()</span><span class="s3">;</span>
+
+	<span class="s1">$(</span><span class="s4">&quot;#userProfileImageInput&quot;</span><span class="s1">).on(</span><span class="s4">&quot;change&quot;</span><span class="s3">, </span><span class="s1">(e) =&gt; {</span>
+		<span class="s3">let </span><span class="s1">f = e.target.files[</span><span class="s5">0</span><span class="s1">]</span><span class="s3">;</span>
+
+		<span class="s3">if </span><span class="s1">(!f.type.match(</span><span class="s4">&quot;image.*&quot;</span><span class="s1">)) {</span>
+			<span class="s1">alert(</span><span class="s4">&quot;이미지를 등록해야 합니다.&quot;</span><span class="s1">)</span><span class="s3">;</span>
+			<span class="s3">return;</span>
+		<span class="s1">}</span>
+		
+		<span class="s2">// 서버에 이미지를 전송</span>
+		<span class="s3">let </span><span class="s1">profileImageForm = $(</span><span class="s4">&quot;#userProfileImageForm&quot;</span><span class="s1">)[</span><span class="s5">0</span><span class="s1">]</span><span class="s3">;</span>
+		<span class="s1">console.log(profileImageForm)</span><span class="s3">;</span>
+
+		<span class="s2">// FormData 객체를 이용하면 form 태그의 필드와 그 값을 나타내는 일련의 key/value 쌍을 담을 수 있다.</span>
+		<span class="s3">let </span><span class="s1">formData = </span><span class="s3">new </span><span class="s1">FormData(profileImageForm)</span><span class="s3">;</span>
+		
+		<span class="s1">$.ajax({</span>
+			<span class="s1">type: </span><span class="s4">&quot;put&quot;</span><span class="s3">,</span>
+			<span class="s1">url: </span><span class="s4">`/api/user/</span><span class="s1">${principalId}</span><span class="s4">/profileImageUrl`</span><span class="s3">,</span>
+			<span class="s1">data: formData</span><span class="s3">,</span>
+			<span class="s1">contentType: </span><span class="s3">false, </span><span class="s2">// 필수 : x-www-form-urlencoded로 파싱되는 것을 방지</span>
+			<span class="s1">processData: </span><span class="s3">false,  </span><span class="s2">// 필수: contentType을 false로 줬을 때 QueryString 자동 설정됨. 해제</span>
+			<span class="s1">enctype: </span><span class="s4">&quot;multipart/form-data&quot;</span><span class="s3">,</span>
+			<span class="s1">dataType: </span><span class="s4">&quot;json&quot;</span>
+		<span class="s1">}).done(res=&gt;{</span>
+			<span class="s2">// 사진 전송 성공시 이미지 변경</span>
+			<span class="s3">let </span><span class="s1">reader = </span><span class="s3">new </span><span class="s1">FileReader()</span><span class="s3">;</span>
+			<span class="s1">reader.onload = (e) =&gt; {</span>
+				<span class="s1">$(</span><span class="s4">&quot;#userProfileImage&quot;</span><span class="s1">).attr(</span><span class="s4">&quot;src&quot;</span><span class="s3">, </span><span class="s1">e.target.result)</span><span class="s3">;</span>
+			<span class="s1">}</span>
+			<span class="s1">reader.readAsDataURL(f)</span><span class="s3">; </span><span class="s2">// 이 코드 실행시 reader.onload 실행됨.</span>
+		<span class="s1">}).fail(error=&gt;{</span>
+			<span class="s1">console.log(</span><span class="s4">&quot;오류&quot;</span><span class="s3">, </span><span class="s1">error)</span><span class="s3">;</span>
+		<span class="s1">})</span><span class="s3">;</span>
+
+
+	<span class="s1">})</span><span class="s3">;</span>
+<span class="s1">}</span>
+<span class="s3">function </span><span class="s1">openModal() {</span>
+	<span class="s1">$(</span><span class="s4">&quot;.modal-fade&quot;</span><span class="s1">).css(</span><span class="s4">&quot;display&quot;</span><span class="s3">, </span><span class="s4">&quot;flex&quot;</span><span class="s1">)</span><span class="s3">;</span>
+<span class="s1">}</span>
+<span class="s3">function </span><span class="s1">closeModal() {</span>
+	<span class="s1">$(</span><span class="s4">&quot;.modal-fade&quot;</span><span class="s1">).css(</span><span class="s4">&quot;display&quot;</span><span class="s3">, </span><span class="s4">&quot;none&quot;</span><span class="s1">)</span><span class="s3">;</span>
+<span class="s1">}</span>
+
+<span class="s3">function </span><span class="s1">closePopup(selector) {</span>
+	<span class="s1">$(selector).css(</span><span class="s4">&quot;display&quot;</span><span class="s3">, </span><span class="s4">&quot;none&quot;</span><span class="s1">)</span><span class="s3">;</span>
+<span class="s1">}</span>
+
+<span class="s2">/* 
+// (4) 사용자 정보 메뉴 열기 닫기 
+function popup(obj) { 
+    $(obj).css(&quot;display&quot;, &quot;flex&quot;); 
+} 
+ 
+function closePopup(obj) { 
+    $(obj).css(&quot;display&quot;, &quot;none&quot;); 
+} 
+ 
+ 
+// (5) 사용자 정보(회원정보, 로그아웃, 닫기) 모달 
+function modalInfo() { 
+    $(&quot;.modal-info&quot;).css(&quot;display&quot;, &quot;none&quot;); 
+} 
+ 
+// (6) 사용자 프로파일 이미지 메뉴(사진업로드, 취소) 모달 
+function modalImage() { 
+    $(&quot;.modal-image&quot;).css(&quot;display&quot;, &quot;none&quot;); 
+} 
+ 
+// (7) 구독자 정보 모달 닫기 
+function modalClose() { 
+    $(&quot;.modal-subscribe&quot;).css(&quot;display&quot;, &quot;none&quot;); 
+    location.reload(); 
+}*/</span>
+
+
+
+
+
+
+</pre>
+</body>
+</html>

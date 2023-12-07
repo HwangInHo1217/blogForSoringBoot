@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>index.jsp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #cc7832; font-weight: bold;}
+.s2 { color: #a9b7c6;}
+.s3 { color: #6a8759;}
+.s4 { color: #a9b7c6;}
+.s5 { color: #e8bf6a;}
+.s6 { color: #bababa;}
+.s7 { color: #a5c261;}
+.s8 { color: #cc7832;}
+.s9 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+index.jsp</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;%@</span><span class="s1">page </span><span class="s2">language</span><span class="s0">=&quot;</span><span class="s3">java</span><span class="s0">&quot; </span><span class="s2">contentType</span><span class="s0">=&quot;</span><span class="s3">text/html; charset=UTF-8</span><span class="s0">&quot;</span>
+        <span class="s2">pageEncoding</span><span class="s0">=&quot;</span><span class="s3">UTF-8</span><span class="s0">&quot;%&gt;</span>
+
+
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">layout/header.jsp</span><span class="s0">&quot;%&gt;</span>
+
+
+
+<span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;container&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;posts-container &quot;</span><span class="s5">&gt;</span>
+    <span class="s0">&lt;</span><span class="s1">c:forEach </span><span class="s2">var</span><span class="s3">=&quot;board&quot; </span><span class="s2">items</span><span class="s3">=&quot;</span><span class="s8">${</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">content</span><span class="s8">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;card m-2&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;card-body&quot;</span><span class="s5">&gt;</span>
+                <span class="s5">&lt;h5&gt;</span><span class="s4">글쓴이 : </span><span class="s5">&lt;a </span><span class="s6">href</span><span class="s7">=&quot;/user/</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">&quot;</span><span class="s5">&gt; </span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">username</span><span class="s8">}</span><span class="s5">&lt;/a&gt;&lt;/h5&gt;</span>
+                <span class="s5">&lt;h4 </span><span class="s6">class</span><span class="s7">=&quot;card-title&quot;</span><span class="s5">&gt;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">title</span><span class="s8">}</span><span class="s5">&lt;/h4&gt;</span>
+                <span class="s5">&lt;p&gt;</span><span class="s4">좋아요 : </span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">likeCount</span><span class="s8">} </span><span class="s4">댓글 : </span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">replyCount</span><span class="s8">}</span><span class="s5">&lt;/p&gt;</span>
+                <span class="s5">&lt;a </span><span class="s6">href</span><span class="s7">=&quot;/board/</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">&quot; </span><span class="s6">class</span><span class="s7">=&quot;btn btn-primary&quot;</span><span class="s5">&gt;</span><span class="s4">상세보기</span><span class="s5">&lt;/a&gt;</span>
+            <span class="s5">&lt;/div&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+    <span class="s0">&lt;/</span><span class="s1">c:forEach</span><span class="s0">&gt;</span>
+
+    <span class="s5">&lt;ul </span><span class="s6">class</span><span class="s7">=&quot;pagination justify-content-center&quot;</span><span class="s5">&gt;</span>
+        <span class="s0">&lt;</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:when </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s8">${</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">first</span><span class="s8">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;page-item disabled&quot;</span><span class="s5">&gt;&lt;a </span><span class="s6">class</span><span class="s7">=&quot;page-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;?page=</span><span class="s8">${</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">number</span><span class="s0">-</span><span class="s9">1</span><span class="s8">}</span><span class="s7">&quot;</span><span class="s5">&gt;</span><span class="s4">Previous</span><span class="s5">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:when</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;page-item &quot;</span><span class="s5">&gt;&lt;a </span><span class="s6">class</span><span class="s7">=&quot;page-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;?page=</span><span class="s8">${</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">number</span><span class="s0">-</span><span class="s9">1</span><span class="s8">}</span><span class="s7">&quot;</span><span class="s5">&gt;</span><span class="s4">Previous</span><span class="s5">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+
+        <span class="s0">&lt;/</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+
+        <span class="s0">&lt;</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:when </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s8">${</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">last</span><span class="s8">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;page-item disabled&quot;</span><span class="s5">&gt;&lt;a </span><span class="s6">class</span><span class="s7">=&quot;page-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;?page=</span><span class="s8">${</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">number</span><span class="s0">+</span><span class="s9">1</span><span class="s8">}</span><span class="s7">&quot;</span><span class="s5">&gt;</span><span class="s4">Next</span><span class="s5">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:when</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+                <span class="s5">&lt;li </span><span class="s6">class</span><span class="s7">=&quot;page-item&quot;</span><span class="s5">&gt;&lt;a </span><span class="s6">class</span><span class="s7">=&quot;page-link&quot; </span><span class="s6">href</span><span class="s7">=&quot;?page=</span><span class="s8">${</span><span class="s2">boards</span><span class="s0">.</span><span class="s2">number</span><span class="s0">+</span><span class="s9">1</span><span class="s8">}</span><span class="s7">&quot;</span><span class="s5">&gt;</span><span class="s4">Next</span><span class="s5">&lt;/a&gt;&lt;/li&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:otherwise</span><span class="s0">&gt;</span>
+        <span class="s0">&lt;/</span><span class="s1">c:choose</span><span class="s0">&gt;</span>
+
+    <span class="s5">&lt;/ul&gt;</span>
+        <span class="s5">&lt;br&gt;</span>
+    <span class="s5">&lt;form </span><span class="s6">action</span><span class="s7">=&quot;/?searchKeyword{searchKeyword}&quot; </span><span class="s6">method</span><span class="s7">=&quot;GET&quot;</span><span class="s5">&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;input-group mt-3 mb-3&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;button </span><span class="s6">type</span><span class="s7">=&quot;button&quot; </span><span class="s6">class</span><span class="s7">=&quot;btn btn-outline-secondary dropdown-toggle&quot; </span><span class="s6">data-toggle</span><span class="s7">=&quot;dropdown&quot;</span><span class="s5">&gt;</span>
+                <span class="s4">필터</span>
+            <span class="s5">&lt;/button&gt;</span>
+            <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;dropdown-menu&quot;</span><span class="s5">&gt;</span>
+                <span class="s5">&lt;a </span><span class="s6">class</span><span class="s7">=&quot;dropdown-item&quot;  </span><span class="s6">data-filter</span><span class="s7">=&quot;post&quot;</span><span class="s5">&gt;</span><span class="s4">게시물</span><span class="s5">&lt;/a&gt;</span>
+                <span class="s5">&lt;a </span><span class="s6">class</span><span class="s7">=&quot;dropdown-item&quot;  </span><span class="s6">data-filter</span><span class="s7">=&quot;user&quot;</span><span class="s5">&gt;</span><span class="s4">사용자</span><span class="s5">&lt;/a&gt;</span>
+            <span class="s5">&lt;/div&gt;</span>
+            <span class="s5">&lt;input </span><span class="s6">type</span><span class="s7">=&quot;hidden&quot; </span><span class="s6">name</span><span class="s7">=&quot;filterType&quot; </span><span class="s6">id</span><span class="s7">=&quot;filterType&quot; </span><span class="s6">value</span><span class="s7">=&quot;post&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;input </span><span class="s6">type</span><span class="s7">=&quot;text&quot; </span><span class="s6">name</span><span class="s7">=&quot;searchKeyword&quot; </span><span class="s6">class</span><span class="s7">=&quot;form-control&quot; </span><span class="s6">placeholder</span><span class="s7">=&quot;왼쪽 필터로 구분 기본값은 게시물 검색 입니다.&quot;</span><span class="s5">/&gt;</span>
+            <span class="s5">&lt;button </span><span class="s6">id</span><span class="s7">=&quot;btn-search&quot; </span><span class="s6">type</span><span class="s7">=&quot;submit&quot; </span><span class="s6">class</span><span class="s7">=&quot;btn btn-primary&quot;</span><span class="s5">&gt;</span><span class="s4">검색</span><span class="s5">&lt;/button&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+
+    <span class="s5">&lt;/form&gt;</span>
+    <span class="s5">&lt;/div&gt;</span>
+
+<span class="s5">&lt;/div&gt;</span>
+
+<span class="s5">&lt;script </span><span class="s6">src</span><span class="s7">=&quot;/js/board.js&quot;</span><span class="s5">&gt;&lt;/script&gt;</span>
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">layout/footer.jsp</span><span class="s0">&quot;%&gt;</span>
+
+
+
+</pre>
+</body>
+</html>

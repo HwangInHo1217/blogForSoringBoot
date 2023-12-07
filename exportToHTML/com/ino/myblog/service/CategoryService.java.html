@@ -1,0 +1,111 @@
+<html>
+<head>
+<title>CategoryService.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+CategoryService.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.service</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.Category</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.User</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.CategoryRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.ino.myblog.repository.UserRepository</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.beans.factory.annotation.Autowired</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.security.acls.model.NotFoundException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.stereotype.Service</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.springframework.transaction.annotation.Transactional</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Optional</span><span class="s0">;</span>
+
+<span class="s1">@Service</span>
+<span class="s0">public class </span><span class="s1">CategoryService {</span>
+
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">CategoryRepository categoryRepository</span><span class="s0">;</span>
+    <span class="s1">@Autowired</span>
+    <span class="s0">private </span><span class="s1">UserRepository userRepository</span><span class="s0">;</span>
+
+<span class="s2">/*    @Transactional 
+    public Category createCategory(String categoryName, int userId) { 
+        User user = userRepository.findById(userId) 
+                .orElseThrow(() -&gt; new NotFoundException(&quot;User not found&quot;)); 
+ 
+        Category category = new Category(); 
+        System.out.println(&quot;category = &quot; + category); 
+        category.setName(categoryName); 
+        System.out.println(&quot;categoryName = &quot; + categoryName); 
+        category.setUser(user); 
+        return categoryRepository.save(category); 
+    }*/</span>
+    <span class="s1">@Transactional</span>
+    <span class="s0">public </span><span class="s1">Category createCategory(String categoryName</span><span class="s0">, </span><span class="s1">Integer parentId</span><span class="s0">, int </span><span class="s1">userId) {</span>
+        <span class="s1">User user = userRepository.findById(userId)</span>
+                <span class="s1">.orElseThrow(() -&gt; </span><span class="s0">new </span><span class="s1">NotFoundException(</span><span class="s3">&quot;User not found&quot;</span><span class="s1">))</span><span class="s0">;</span>
+
+        <span class="s1">Category category = </span><span class="s0">new </span><span class="s1">Category()</span><span class="s0">;</span>
+        <span class="s1">category.setName(categoryName)</span><span class="s0">;</span>
+        <span class="s1">category.setUser(user)</span><span class="s0">;</span>
+
+        <span class="s0">if </span><span class="s1">(parentId != </span><span class="s0">null</span><span class="s1">) {</span>
+            <span class="s1">Category parentCategory = getCategoryById(parentId)</span>
+                    <span class="s1">.orElseThrow(() -&gt; </span><span class="s0">new </span><span class="s1">NotFoundException(</span><span class="s3">&quot;Parent category not found&quot;</span><span class="s1">))</span><span class="s0">;</span>
+            <span class="s1">category.setParentCategory(parentCategory)</span><span class="s0">;</span>
+            <span class="s1">parentCategory.getChildCategories().add(category)</span><span class="s0">; </span><span class="s2">// 부모 카테고리의 자식 목록에 추가</span>
+        <span class="s1">}</span>
+
+        <span class="s0">return </span><span class="s1">categoryRepository.save(category)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional</span>
+    <span class="s0">public </span><span class="s1">List&lt;Category&gt; findCategoriesByUser(String userName) {</span>
+        <span class="s1">Optional&lt;User&gt; user = userRepository.findByUsername(userName)</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(user.isPresent()) {</span>
+            <span class="s0">return </span><span class="s1">categoryRepository.findByUserId(user.get().getId())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">return new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Transactional(readOnly = </span><span class="s0">true</span><span class="s1">)</span>
+
+    <span class="s0">public </span><span class="s1">Optional&lt;Category&gt; getCategoryById(</span><span class="s0">int </span><span class="s1">id) {</span>
+        <span class="s0">return </span><span class="s1">categoryRepository.findById(id)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+<span class="s2">/*    @Transactional(readOnly = true) 
+    public List&lt;Category&gt; getAllCategoriesByUser(int userId) { 
+        return categoryRepository.findByUserId(userId); 
+    }*/</span>
+
+    <span class="s1">@Transactional</span>
+    <span class="s0">public </span><span class="s1">Category updateCategory(</span><span class="s0">int </span><span class="s1">id</span><span class="s0">, </span><span class="s1">Category updatedCategory) {</span>
+        <span class="s0">return </span><span class="s1">categoryRepository.findById(id)</span>
+                <span class="s1">.map(category -&gt; {</span>
+                    <span class="s1">category.setName(updatedCategory.getName())</span><span class="s0">;</span>
+                    <span class="s1">category.setParentCategory(updatedCategory.getParentCategory())</span><span class="s0">;</span>
+                    <span class="s2">// 다른 필드 업데이트</span>
+                    <span class="s0">return </span><span class="s1">categoryRepository.save(category)</span><span class="s0">;</span>
+                <span class="s1">}).orElseGet(() -&gt; {</span>
+                    <span class="s1">updatedCategory.setId(id)</span><span class="s0">;</span>
+                    <span class="s0">return </span><span class="s1">categoryRepository.save(updatedCategory)</span><span class="s0">;</span>
+                <span class="s1">})</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Transactional</span>
+    <span class="s0">public void </span><span class="s1">deleteCategory(</span><span class="s0">int </span><span class="s1">id) {</span>
+        <span class="s1">categoryRepository.deleteById(id)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

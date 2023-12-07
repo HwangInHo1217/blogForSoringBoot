@@ -1,0 +1,101 @@
+<html>
+<head>
+<title>detail.jsp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #cc7832; font-weight: bold;}
+.s2 { color: #a9b7c6;}
+.s3 { color: #6a8759;}
+.s4 { color: #a9b7c6;}
+.s5 { color: #e8bf6a;}
+.s6 { color: #bababa;}
+.s7 { color: #a5c261;}
+.s8 { color: #cc7832;}
+.s9 { color: #6d9cbe;}
+.s10 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+detail.jsp</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;%@</span><span class="s1">page </span><span class="s2">language</span><span class="s0">=&quot;</span><span class="s3">java</span><span class="s0">&quot; </span><span class="s2">contentType</span><span class="s0">=&quot;</span><span class="s3">text/html; charset=UTF-8</span><span class="s0">&quot;</span>
+        <span class="s2">pageEncoding</span><span class="s0">=&quot;</span><span class="s3">UTF-8</span><span class="s0">&quot;%&gt;</span>
+
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/header.jsp</span><span class="s0">&quot;%&gt;</span>
+<span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;container&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;button </span><span class="s6">class</span><span class="s7">=&quot;btn btn-secondary&quot; </span><span class="s6">onclick</span><span class="s7">=&quot;</span><span class="s4">history.back()</span><span class="s7">&quot;</span><span class="s5">&gt;</span><span class="s4">돌아가기</span><span class="s5">&lt;/button&gt;</span>
+    <span class="s0">&lt;</span><span class="s1">c:if </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s0">==</span><span class="s2">principal</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+    <span class="s5">&lt;a </span><span class="s6">href</span><span class="s7">=&quot;/board/</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">/updateForm&quot; </span><span class="s6">class</span><span class="s7">=&quot;btn btn-warning&quot;</span><span class="s5">&gt;</span><span class="s4">수정</span><span class="s5">&lt;/a&gt;</span>
+    <span class="s5">&lt;button </span><span class="s6">id</span><span class="s7">=&quot;btn-delete&quot;</span><span class="s6">class</span><span class="s7">=&quot;btn btn-danger&quot;</span><span class="s5">&gt;</span><span class="s4">삭제</span><span class="s5">&lt;/button&gt;</span>
+    <span class="s0">&lt;/</span><span class="s1">c:if</span><span class="s0">&gt;</span>
+
+    <span class="s5">&lt;br/&gt;&lt;br/&gt;</span>
+    <span class="s5">&lt;div&gt;</span>
+        <span class="s4">글 번호 : </span><span class="s5">&lt;span </span><span class="s6">id</span><span class="s7">=&quot;id&quot;</span><span class="s5">&gt; &lt;i&gt;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">id</span><span class="s8">} </span><span class="s5">&lt;/i&gt; &lt;/span&gt;</span>
+        <span class="s4">작성자 : </span><span class="s5">&lt;span&gt; &lt;i&gt;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">username</span><span class="s8">} </span><span class="s5">&lt;/i&gt; &lt;/span&gt;</span>
+        <span class="s4">조회수 : </span><span class="s5">&lt;span&gt; &lt;i&gt;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">count</span><span class="s8">}</span><span class="s5">&lt;/i&gt;&lt;/span&gt;</span>
+        <span class="s4">작성시간 : </span><span class="s5">&lt;span&gt;&lt;i&gt;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">createDate</span><span class="s8">}</span><span class="s5">&lt;/i&gt;&lt;/span&gt;</span>
+        <span class="s5">&lt;br/&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;form-group&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;h3&gt;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">title</span><span class="s8">}</span><span class="s5">&lt;/h3&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+    <span class="s5">&lt;hr/&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;form-group&quot;</span><span class="s5">&gt;</span>
+
+            <span class="s5">&lt;div&gt;</span>
+                <span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">content</span><span class="s8">}</span>
+            <span class="s5">&lt;/div&gt;</span>
+
+        <span class="s5">&lt;/div&gt;</span>
+    <span class="s5">&lt;hr/&gt;</span>
+        <span class="s5">&lt;div &gt;</span>
+            <span class="s5">&lt;button </span><span class="s6">class</span><span class="s7">=&quot;btn btn-light&quot; </span><span class="s6">id</span><span class="s7">=&quot;storyLikeIcon-</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">&quot; </span><span class="s6">onclick</span><span class="s7">=&quot;</span><span class="s4">toggleLike(</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s4">)</span><span class="s7">&quot;</span><span class="s5">&gt;</span>
+                <span class="s5">&lt;span </span><span class="s6">class</span><span class="s7">=&quot;heart-icon&quot;</span><span class="s5">&gt;</span><span class="s4">❤️</span><span class="s5">&lt;/span&gt;</span>
+            <span class="s5">&lt;/button&gt;</span>
+            <span class="s5">&lt;span </span><span class="s6">class</span><span class="s7">=&quot;likes-count&quot; </span><span class="s6">id</span><span class="s7">=&quot;storyLikeCount-</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">&quot;</span><span class="s5">&gt;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">likeCount</span><span class="s8">} </span><span class="s4">likes</span><span class="s5">&lt;/span&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+    <span class="s5">&lt;/div&gt;</span>
+    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;card&quot;</span><span class="s5">&gt;</span>
+        <span class="s5">&lt;form&gt;</span>
+            <span class="s5">&lt;input </span><span class="s6">type</span><span class="s7">=&quot;hidden&quot; </span><span class="s6">id</span><span class="s7">=&quot;userId&quot;</span><span class="s6">value</span><span class="s7">=&quot;</span><span class="s8">${</span><span class="s2">principal</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">&quot;</span><span class="s5">/&gt;</span>
+            <span class="s5">&lt;input </span><span class="s6">type</span><span class="s7">=&quot;hidden&quot; </span><span class="s6">id</span><span class="s7">=&quot;boardId&quot;</span><span class="s6">value</span><span class="s7">=&quot;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">&quot;</span><span class="s5">/&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;card-body&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;textarea </span><span class="s6">id</span><span class="s7">=&quot;reply-content&quot; </span><span class="s6">class </span><span class="s7">= &quot;form-control&quot; </span><span class="s6">rows</span><span class="s7">=&quot;1&quot;</span><span class="s5">&gt; &lt;/textarea&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;card-footer&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;button </span><span class="s6">type</span><span class="s7">=&quot;button&quot; </span><span class="s6">id</span><span class="s7">=&quot;btn-reply-save&quot; </span><span class="s6">class</span><span class="s7">=&quot;btn btn-primary&quot;</span><span class="s5">&gt;</span><span class="s4">등록</span><span class="s5">&lt;/button&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+        <span class="s5">&lt;/form&gt;</span>
+    <span class="s5">&lt;/div&gt;</span>
+<span class="s5">&lt;/br&gt;</span>
+    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;card&quot;</span><span class="s5">&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;card-header&quot;</span><span class="s5">&gt;</span><span class="s4">댓글 목록</span><span class="s5">&lt;/div&gt;</span>
+        <span class="s5">&lt;ul </span><span class="s6">id</span><span class="s7">=&quot;reply-box&quot; </span><span class="s6">class</span><span class="s7">=&quot;list-group&quot;</span><span class="s5">&gt;</span>
+            <span class="s0">&lt;</span><span class="s1">c:forEach </span><span class="s2">var</span><span class="s3">=&quot;reply&quot; </span><span class="s2">items</span><span class="s3">=&quot;</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">replys</span><span class="s8">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                <span class="s5">&lt;li </span><span class="s6">id</span><span class="s7">=&quot;reply-</span><span class="s8">${</span><span class="s2">reply</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">&quot; </span><span class="s6">class</span><span class="s7">=&quot;list-group-item d-flex justify-content-between&quot;</span><span class="s5">&gt;</span>
+                    <span class="s5">&lt;div&gt;</span><span class="s8">${</span><span class="s2">reply</span><span class="s0">.</span><span class="s2">content</span><span class="s8">}</span><span class="s5">&lt;/div&gt;</span>
+                    <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;d-flex&quot;</span><span class="s5">&gt;</span>
+                        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;font=italic&quot;</span><span class="s5">&gt; </span><span class="s4">작성자 : </span><span class="s8">${</span><span class="s2">reply</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">username</span><span class="s8">} </span><span class="s9">&amp;nbsp; </span><span class="s5">&lt;/div&gt;</span>
+                        <span class="s0">&lt;</span><span class="s1">c:if </span><span class="s2">test</span><span class="s3">=&quot;</span><span class="s8">${</span><span class="s2">reply</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id </span><span class="s8">eq </span><span class="s2">principal</span><span class="s0">.</span><span class="s2">user</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s3">&quot;</span><span class="s0">&gt;</span>
+                            <span class="s5">&lt;button </span><span class="s6">onClick</span><span class="s7">=&quot;index.replyDelete(</span><span class="s8">${</span><span class="s2">board</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">, </span><span class="s8">${</span><span class="s2">reply</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">)&quot; </span><span class="s6">class</span><span class="s7">=&quot;badge btn btn-danger&quot;</span><span class="s5">&gt;</span><span class="s4">삭제</span><span class="s5">&lt;/button&gt;</span>
+                        <span class="s0">&lt;/</span><span class="s1">c:if</span><span class="s0">&gt;</span>
+                    <span class="s5">&lt;/div&gt;</span>
+                <span class="s5">&lt;/li&gt;</span>
+            <span class="s0">&lt;/</span><span class="s1">c:forEach</span><span class="s0">&gt;</span>
+            <span class="s10">&lt;%--강의 2분6초--%&gt;</span>
+        <span class="s5">&lt;/ul&gt;</span>
+    <span class="s5">&lt;/div&gt;</span>
+<span class="s5">&lt;/div&gt;</span>
+
+<span class="s5">&lt;script </span><span class="s6">src</span><span class="s7">=&quot;/js/board.js&quot;</span><span class="s5">&gt;&lt;/script&gt;</span>
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/footer.jsp</span><span class="s0">&quot;%&gt;</span>
+
+
+
+</pre>
+</body>
+</html>

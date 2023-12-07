@@ -1,0 +1,70 @@
+<html>
+<head>
+<title>build.gradle</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+build.gradle</font>
+</center></td></tr></table>
+<pre><span class="s0">plugins {</span>
+	<span class="s0">id </span><span class="s1">'java'</span>
+	<span class="s0">id </span><span class="s1">'org.springframework.boot' </span><span class="s0">version </span><span class="s1">'2.7.17'</span>
+	<span class="s0">id </span><span class="s1">'io.spring.dependency-management' </span><span class="s0">version </span><span class="s1">'1.0.15.RELEASE'</span>
+	<span class="s0">id </span><span class="s1">'war'</span>
+<span class="s0">}</span>
+
+
+<span class="s0">group = </span><span class="s1">'com.ino'</span>
+<span class="s0">version = </span><span class="s1">'0.0.1-SNAPSHOT'</span>
+
+<span class="s0">java {</span>
+	<span class="s0">sourceCompatibility = </span><span class="s1">'11'</span>
+<span class="s0">}</span>
+
+<span class="s0">configurations {</span>
+	<span class="s0">compileOnly {</span>
+		<span class="s0">extendsFrom annotationProcessor</span>
+	<span class="s0">}</span>
+<span class="s0">}</span>
+
+<span class="s0">repositories {</span>
+	<span class="s0">mavenCentral()</span>
+<span class="s0">}</span>
+
+<span class="s0">dependencies {</span>
+	<span class="s0">implementation </span><span class="s1">'org.springframework.security:spring-security-taglibs'</span>
+	<span class="s0">implementation </span><span class="s1">'org.apache.tomcat.embed:tomcat-embed-jasper'</span>
+	<span class="s0">implementation </span><span class="s1">'javax.servlet:jstl'</span>
+	<span class="s0">implementation </span><span class="s1">'org.springframework.boot:spring-boot-starter-data-jpa'</span>
+	<span class="s0">implementation </span><span class="s1">'org.springframework.boot:spring-boot-starter-security'</span>
+	<span class="s0">implementation </span><span class="s1">'org.springframework.boot:spring-boot-starter-web'</span>
+	<span class="s0">compileOnly </span><span class="s1">'org.projectlombok:lombok'</span>
+	<span class="s0">developmentOnly </span><span class="s1">'org.springframework.boot:spring-boot-devtools'</span>
+	<span class="s0">runtimeOnly </span><span class="s1">'com.mysql:mysql-connector-j'</span>
+	<span class="s0">annotationProcessor </span><span class="s1">'org.projectlombok:lombok'</span>
+	<span class="s0">testImplementation </span><span class="s1">'org.springframework.boot:spring-boot-starter-test'</span>
+	<span class="s0">testImplementation </span><span class="s1">'org.springframework.security:spring-security-test'</span>
+	<span class="s0">implementation </span><span class="s1">'org.springframework.boot:spring-boot-starter-mail'</span>
+	<span class="s0">implementation </span><span class="s1">'org.qlrm:qlrm:2.1.1'</span>
+	<span class="s0">implementation </span><span class="s1">'org.springframework.boot:spring-boot-starter-websocket'</span>
+
+	<span class="s0">implementation </span><span class="s1">'io.jsonwebtoken:jjwt-api:0.11.2'</span>
+	<span class="s0">runtimeOnly </span><span class="s1">'io.jsonwebtoken:jjwt-impl:0.11.2'</span>
+	<span class="s0">runtimeOnly </span><span class="s1">'io.jsonwebtoken:jjwt-jackson:0.11.2'</span>
+<span class="s0">}</span>
+
+<span class="s0">tasks.named(</span><span class="s1">'test'</span><span class="s0">) {</span>
+	<span class="s0">useJUnitPlatform()</span>
+<span class="s0">}</span>
+<span class="s0">war{</span>
+	<span class="s0">version=</span><span class="s1">'1.0'</span>
+<span class="s0">}</span></pre>
+</body>
+</html>

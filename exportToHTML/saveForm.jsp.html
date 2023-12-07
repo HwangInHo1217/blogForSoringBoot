@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>saveForm.jsp</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #cc7832; font-weight: bold;}
+.s2 { color: #a9b7c6;}
+.s3 { color: #6a8759;}
+.s4 { color: #a9b7c6;}
+.s5 { color: #e8bf6a;}
+.s6 { color: #bababa;}
+.s7 { color: #a5c261;}
+.s8 { color: #cc7832;}
+.s9 { color: #6a8759;}
+.s10 { color: #cc7832;}
+.s11 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+saveForm.jsp</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;%@</span><span class="s1">page </span><span class="s2">language</span><span class="s0">=&quot;</span><span class="s3">java</span><span class="s0">&quot; </span><span class="s2">contentType</span><span class="s0">=&quot;</span><span class="s3">text/html; charset=UTF-8</span><span class="s0">&quot;</span>
+        <span class="s2">pageEncoding</span><span class="s0">=&quot;</span><span class="s3">UTF-8</span><span class="s0">&quot;%&gt;</span>
+
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/header.jsp</span><span class="s0">&quot;%&gt;</span>
+<span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;container&quot;</span><span class="s5">&gt;</span>
+    <span class="s5">&lt;form&gt;</span>
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;form-group&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;label </span><span class="s6">for</span><span class="s7">=&quot;category&quot;</span><span class="s5">&gt;</span><span class="s4">카테고리 선택:</span><span class="s5">&lt;/label&gt;</span>
+            <span class="s5">&lt;select </span><span class="s6">class</span><span class="s7">=&quot;form-control&quot; </span><span class="s6">id</span><span class="s7">=&quot;category&quot;</span><span class="s5">&gt;</span>
+                <span class="s0">&lt;</span><span class="s1">c:forEach </span><span class="s2">items</span><span class="s3">=&quot;</span><span class="s8">${</span><span class="s2">categories</span><span class="s8">}</span><span class="s3">&quot; </span><span class="s2">var</span><span class="s3">=&quot;category&quot;</span><span class="s0">&gt;</span>
+                    <span class="s5">&lt;option </span><span class="s6">value</span><span class="s7">=&quot;</span><span class="s8">${</span><span class="s2">category</span><span class="s0">.</span><span class="s2">id</span><span class="s8">}</span><span class="s7">&quot;</span><span class="s5">&gt;</span><span class="s8">${</span><span class="s2">category</span><span class="s0">.</span><span class="s2">name</span><span class="s8">}</span><span class="s5">&lt;/option&gt;</span>
+                <span class="s0">&lt;/</span><span class="s1">c:forEach</span><span class="s0">&gt;</span>
+            <span class="s5">&lt;/select&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;form-group&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;input </span><span class="s6">type</span><span class="s7">=&quot;text&quot; </span><span class="s6">class</span><span class="s7">=&quot;form-control&quot; </span><span class="s6">placeholder</span><span class="s7">=&quot;제목을 입력하세요&quot; </span><span class="s6">id</span><span class="s7">=&quot;title&quot;</span><span class="s5">&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+
+        <span class="s5">&lt;div </span><span class="s6">class</span><span class="s7">=&quot;form-group&quot;</span><span class="s5">&gt;</span>
+            <span class="s5">&lt;textarea </span><span class="s6">class</span><span class="s7">=&quot;form-control summernote&quot; </span><span class="s6">rows</span><span class="s7">=&quot;5&quot; </span><span class="s6">id</span><span class="s7">=&quot;content&quot;</span><span class="s5">&gt;&lt;/textarea&gt;</span>
+        <span class="s5">&lt;/div&gt;</span>
+
+    <span class="s5">&lt;/form&gt;</span>
+    <span class="s5">&lt;button </span><span class="s6">id</span><span class="s7">=&quot;btn-board-save&quot; </span><span class="s6">class</span><span class="s7">=&quot;btn btn-primary&quot;</span><span class="s5">&gt;</span><span class="s4">글쓰기 완료</span><span class="s5">&lt;/button&gt;</span>
+
+<span class="s5">&lt;/div&gt;</span>
+<span class="s5">&lt;script&gt;</span>
+    <span class="s4">$(</span><span class="s9">'.summernote'</span><span class="s4">).summernote({</span>
+        <span class="s4">placeholder: </span><span class="s9">'내용을 입력하세요'</span><span class="s10">,</span>
+        <span class="s4">tabsize: </span><span class="s11">2</span><span class="s10">,</span>
+        <span class="s4">height: </span><span class="s11">300</span>
+    <span class="s4">})</span><span class="s10">;</span>
+<span class="s5">&lt;/script&gt;</span>
+<span class="s5">&lt;script </span><span class="s6">src</span><span class="s7">=&quot;/js/board.js&quot;</span><span class="s5">&gt;&lt;/script&gt;</span>
+<span class="s0">&lt;%@</span><span class="s1">include </span><span class="s2">file</span><span class="s0">=&quot;</span><span class="s3">../layout/footer.jsp</span><span class="s0">&quot;%&gt;</span>
+
+
+</pre>
+</body>
+</html>

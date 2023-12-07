@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>Reply.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #6a8759;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Reply.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.model</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javax.persistence.*</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.dto.ReplySaveRequestDto</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.AllArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.Builder</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.Data</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.NoArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.hibernate.annotations.CreationTimestamp</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.sql.Timestamp</span><span class="s0">;</span>
+
+<span class="s1">@Data</span>
+<span class="s1">@NoArgsConstructor</span>
+<span class="s1">@AllArgsConstructor</span>
+<span class="s1">@Builder</span>
+<span class="s1">@Entity</span>
+<span class="s0">public class </span><span class="s1">Reply {</span>
+    <span class="s1">@Id</span>
+    <span class="s1">@GeneratedValue(strategy = GenerationType.IDENTITY)</span>
+    <span class="s0">private int </span><span class="s1">id</span><span class="s0">;</span>
+
+    <span class="s1">@Column(nullable = </span><span class="s0">false,</span><span class="s1">length = </span><span class="s2">200</span><span class="s1">)</span>
+    <span class="s0">private </span><span class="s1">String content</span><span class="s0">;</span>
+
+    <span class="s1">@ManyToOne</span>
+    <span class="s1">@JoinColumn(name=</span><span class="s3">&quot;boardId&quot;</span><span class="s1">)</span>
+    <span class="s0">private </span><span class="s1">Board board</span><span class="s0">;</span>
+
+    <span class="s1">@ManyToOne</span>
+    <span class="s1">@JoinColumn(name=</span><span class="s3">&quot;userId&quot;</span><span class="s1">)</span>
+    <span class="s0">private </span><span class="s1">User user</span><span class="s0">;</span>
+    <span class="s1">@CreationTimestamp</span>
+    <span class="s0">private </span><span class="s1">Timestamp createDate</span><span class="s0">;</span>
+
+<span class="s4">/*    public void update(User user, Board board, String content){ 
+        setUser(user); 
+        setBoard(board); 
+        setContent(content); 
+    }*/</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>User.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+User.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ino.myblog.model</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">javax.persistence.*</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.fasterxml.jackson.annotation.JsonIdentityInfo</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.fasterxml.jackson.annotation.JsonIgnoreProperties</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.fasterxml.jackson.annotation.ObjectIdGenerators</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.AllArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.Builder</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.Data</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">lombok.NoArgsConstructor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">org.hibernate.annotations.CreationTimestamp</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.ino.myblog.model.Board</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.sql.Timestamp</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.List</span><span class="s0">;</span>
+
+<span class="s1">@JsonIdentityInfo(</span>
+        <span class="s1">generator = ObjectIdGenerators.PropertyGenerator.</span><span class="s0">class,</span>
+        <span class="s1">property = </span><span class="s2">&quot;id&quot;</span><span class="s1">)</span>
+<span class="s1">@Data</span>
+<span class="s1">@NoArgsConstructor</span>
+<span class="s1">@AllArgsConstructor</span>
+<span class="s1">@Builder</span><span class="s3">//빌더패턴</span>
+<span class="s1">@Entity</span><span class="s3">//user클래스카 mysql에서 자동 테이블 생성</span>
+<span class="s3">//@DynamicInsert // insert 시 null 값 제외하고 인설트</span>
+<span class="s0">public class </span><span class="s1">User {</span>
+    <span class="s1">@Id</span><span class="s3">//프라이머리키</span>
+    <span class="s1">@GeneratedValue(strategy = GenerationType.IDENTITY)</span><span class="s3">//mysql 시퀀스 사용</span>
+    <span class="s0">private int </span><span class="s1">id</span><span class="s0">;</span><span class="s3">//시퀀스,auto_increment</span>
+
+
+    <span class="s1">@Column(nullable=</span><span class="s0">false,</span><span class="s1">length=</span><span class="s4">100</span><span class="s0">, </span><span class="s1">unique = </span><span class="s0">true</span><span class="s1">)</span>
+    <span class="s0">private </span><span class="s1">String username</span><span class="s0">;</span>
+
+    <span class="s1">@Column(length=</span><span class="s4">100</span><span class="s1">) </span><span class="s3">//암호화된 비밀번호 넣을거임</span>
+    <span class="s0">private </span><span class="s1">String password</span><span class="s0">;</span>
+
+    <span class="s1">@Column(nullable=</span><span class="s0">false,</span><span class="s1">length=</span><span class="s4">50</span><span class="s1">)</span>
+    <span class="s0">private </span><span class="s1">String email</span><span class="s0">;</span>
+
+    <span class="s1">@Column(length = </span><span class="s4">100</span><span class="s1">)</span>
+    <span class="s0">private </span><span class="s1">String emailHash</span><span class="s0">;</span>
+
+    <span class="s1">@Enumerated(EnumType.STRING)</span>
+    <span class="s0">private </span><span class="s1">EmailCheck emailCheck</span><span class="s0">;</span>
+
+    <span class="s3">//@ColumnDefault(&quot;'user'&quot;)</span>
+    <span class="s3">//enum 도메인 정의 할 때 사용</span>
+    <span class="s1">@Enumerated(EnumType.STRING)</span><span class="s3">//</span>
+    <span class="s0">private </span><span class="s1">RoleType role</span><span class="s0">;</span><span class="s3">//Enum을 쓰는게 좋음. 데이터에 도메인 생성가능 //admin, user, manger 등 권한</span>
+
+    <span class="s3">//private TimeStamp updateDate;</span>
+    <span class="s1">@CreationTimestamp </span><span class="s3">// 시간 자동 입력</span>
+    <span class="s0">private </span><span class="s1">Timestamp createDate</span><span class="s0">;</span>
+
+    <span class="s0">private </span><span class="s1">String oauth</span><span class="s0">;</span>
+
+    <span class="s1">@OneToMany(mappedBy = </span><span class="s2">&quot;user&quot;</span><span class="s0">, </span><span class="s1">fetch = FetchType.LAZY</span><span class="s0">,</span><span class="s1">cascade = CascadeType.ALL)</span>
+    <span class="s1">@JsonIgnoreProperties({</span><span class="s2">&quot;user&quot;</span><span class="s1">})</span>
+    <span class="s0">private </span><span class="s1">List&lt;Board&gt; boards</span><span class="s0">;</span>
+
+    <span class="s1">@OneToMany(mappedBy = </span><span class="s2">&quot;user&quot;</span><span class="s0">, </span><span class="s1">fetch = FetchType.LAZY</span><span class="s0">,</span><span class="s1">cascade = CascadeType.ALL)</span>
+    <span class="s1">@JsonIgnoreProperties({</span><span class="s2">&quot;user&quot;</span><span class="s1">})</span>
+    <span class="s0">private </span><span class="s1">List&lt;Category&gt; categorys</span><span class="s0">;</span>
+
+    <span class="s0">private </span><span class="s1">String bio</span><span class="s0">; </span><span class="s3">// 자기 소개</span>
+
+    <span class="s0">private </span><span class="s1">String profileImageUrl</span><span class="s0">; </span><span class="s3">// 사진</span>
+<span class="s1">}</span></pre>
+</body>
+</html>
